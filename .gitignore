@@ -1,3 +1,4 @@
 *.brep
 */viewer/*.stl
 __pycache__/
+*.brep.stl
