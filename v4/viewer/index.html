@@ -1,0 +1,339 @@
+<title>Doorbell Lite Sunshade v4</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=swap">
+<style>
+/* layout: full-bleed 3D stage with a narrow instrument rail (stacks under the stage on phones) */
+:root {
+  --bg: #e7e9e6;          /* limestone wall grey, slight green-grey bias */
+  --panel: #f6f7f5;
+  --fg: #1d2224;
+  --muted: #5d676a;
+  --line: #c9cec9;
+  --sun: #c8661d;         /* low desert sun */
+  --ok: #2f7d4f;
+  --warn: #a5541a;
+  --stage: #dfe2de;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #161a1b; --panel: #1e2324; --fg: #e4e8e6; --muted: #98a3a4; --line: #323a3b;
+  --sun: #e48a42; --ok: #5fbf86; --warn: #e49a5c; --stage: #1b2021; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #161a1b; --panel: #1e2324; --fg: #e4e8e6; --muted: #98a3a4; --line: #323a3b;
+  --sun: #e48a42; --ok: #5fbf86; --warn: #e49a5c; --stage: #1b2021; color-scheme: dark }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 14px; line-height: 1.45; }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 340px; height: 100%;
+  padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px)); }
+.stage { position: relative; background: var(--stage); min-height: 420px; }
+#c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.stage .tag { position: absolute; left: 16px; top: 14px; font-family: var(--mono); font-size: 12px; color: var(--muted); pointer-events: none; }
+.rail { background: var(--panel); border-left: 1px solid var(--line); padding-block: 20px 28px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 20px; min-width: 0; overflow-y: auto; }
+h1 { font-family: var(--display); font-weight: 600; font-size: 26px; line-height: 1.1; margin: 0; text-wrap: balance; letter-spacing: 0.01em; }
+.sub { color: var(--muted); margin: 6px 0 0; }
+h2 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin: 0 0 8px; }
+section { display: flex; flex-direction: column; gap: 8px; }
+.row { display: flex; align-items: center; gap: 10px; }
+.row label { flex: 1; }
+input[type=range] { width: 100%; accent-color: var(--sun); }
+.val { font-family: var(--mono); font-variant-numeric: tabular-nums; min-width: 4.5em; text-align: right; color: var(--fg); }
+.chk { display: flex; gap: 14px; flex-wrap: wrap; }
+.chk label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+.readout { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-family: var(--mono); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.readout dt { color: var(--muted); }
+.readout dd { margin: 0; text-align: right; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-family: var(--mono); border: 1px solid currentColor; }
+.pill.ok { color: var(--ok); } .pill.sun { color: var(--sun); }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+td { padding: 3px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.num td { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+table.num td:first-child { text-align: left; font-family: var(--body); }
+select, input[type=number] { font: inherit; padding: 3px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+input[type=number] { width: 5em; }
+td:last-child { text-align: right; font-family: var(--mono); white-space: nowrap; padding-left: 10px; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+button { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+button[aria-pressed=true] { border-color: var(--sun); color: var(--sun); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
+.fov { position: absolute; right: 16px; bottom: 16px; width: min(300px, 48%); border: 1px solid var(--line); background: var(--panel); padding: 6px; border-radius: 6px; }
+.fov img { display: block; width: 100%; }
+.fov p { margin: 4px 0 0; font-size: 11.5px; color: var(--muted); }
+.note { font-size: 12.5px; color: var(--muted); margin: 0; }
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; height: auto; }
+  .stage { min-height: 62vh; }
+  .rail { border-left: 0; border-top: 1px solid var(--line); }
+}
+</style>
+
+<div class="app">
+  <div class="stage">
+    <canvas id="c" aria-label="3D view of the sunshade on the doorbell"></canvas>
+    <div class="tag">v4 · car-shade style · one TR300 part · Doha, wall 150°, doorbell turned 20° left · drag to orbit, pinch or scroll to zoom</div>
+    <div class="fov" id="fovBox" hidden>
+      <img src="sun_in_camera_view.png" alt="Sun tracks for June, equinox and December drawn in the camera picture frame">
+      <p>Sun tracks in the camera's picture. Filled: lens shaded by v2.</p>
+    </div>
+  </div>
+  <aside class="rail">
+    <header>
+      <h1>Doorbell Lite Sunshade v4</h1>
+      <p class="sub">Styled after the arched car shade beside it: a barrel-vault roof with arched ribs, and framed S-diamond lattice on the sides. It's one printed part that replaces the 20° wedge, its back sits flush on the wall, and its lip stays just outside the camera's picture.</p>
+    </header>
+
+    <section>
+      <h2>Sun on your wall</h2>
+      <div class="row"><label for="date">Date</label>
+        <select id="date">
+          <option value="172">Jun 21 (summer)</option>
+          <option value="121">May 1 / Aug 12</option>
+          <option value="80">Mar 21 / Sep 23</option>
+          <option value="36">Feb 5 / Nov 6</option>
+          <option value="355">Dec 21 (winter)</option>
+        </select></div>
+      <div class="row"><label for="time">Time (Doha)</label><span class="val" id="timeV"></span></div>
+      <input type="range" id="time" min="300" max="1110" step="5" value="480">
+      <div class="row"><label for="facing">Wall faces (compass °)</label><input type="number" id="facing" value="150" min="0" max="359" step="1"></div>
+      <p class="note">Camera looks 20° to the left of the wall: <span id="camFacing">170</span>°.</p>
+      <dl class="readout">
+        <dt>Sun</dt><dd id="sunPos"></dd>
+        <dt>Lens</dt><dd id="lensState"></dd>
+        <dt>Sunlit doorbell surface</dt><dd id="litPct"></dd>
+        <dt>…without the hood</dt><dd id="litPct0"></dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Sun energy on the doorbell, Wh per day</h2>
+      <table class="num">
+        <tr><td></td><td>no shade</td><td>v4</td><td>cut</td></tr>
+        <tr><td>Jun 21</td><td>15.0</td><td>0.2</td><td>99%</td></tr><tr><td>May 1 / Aug 12</td><td>19.4</td><td>2.9</td><td>85%</td></tr><tr><td>Mar 21 / Sep 23</td><td>28.6</td><td>11.7</td><td>59%</td></tr><tr><td>Feb 5 / Nov 6</td><td>36.4</td><td>20.9</td><td>43%</td></tr><tr><td>Dec 21</td><td>37.6</td><td>23.6</td><td>37%</td></tr>
+      </table>
+      <p class="note">Clear sky, doorbell on the wedge. In summer the sun leaves this wall at about 11:45; the hot afternoon sun never reaches the doorbell.</p>
+    </section>
+
+    <section>
+      <h2>Install check</h2>
+      <div class="row"><label for="tilt">Hook-on tilt</label><span class="val" id="tiltV"></span></div>
+      <input type="range" id="tilt" min="0" max="20" value="0">
+      <p class="note">The doorbell hooks onto the plate's top tab and swings in. Clear of the roof up to 20° with a 4 mm lift (checked in CAD).</p>
+    </section>
+
+    <section>
+      <h2>Show</h2>
+      <div class="chk">
+        <label><input type="checkbox" id="showDev" checked> Doorbell</label>
+        <label><input type="checkbox" id="showWall" checked> Wall</label>
+        <label><input type="checkbox" id="xray"> See-through hood</label>
+      </div>
+      <div class="btns">
+        <button id="vFront">Front</button><button id="vSide">Side</button><button id="vIso">3/4</button>
+        <button id="vBack">Back (flange)</button><button id="fovBtn" aria-pressed="false">Sun in camera view</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Part</h2>
+      <table>
+        <tr><td>Material</td><td>Phrozen TR300</td></tr>
+        <tr><td>Mass</td><td>70.7 g (replaces the wedge)</td></tr>
+        <tr><td>Lip reach ahead of the doorbell</td><td>up to 12 mm, follows the picture edge</td></tr>
+        <tr><td>Roof</td><td>barrel vault, R34, 3 arched ribs</td></tr>
+        <tr><td>Sides</td><td>2.2 mm shell + 0.9 mm framed S-diamond lattice</td></tr>
+        <tr><td>Finish</td><td>charcoal, to match the car shade</td></tr>
+        <tr><td>Air gap sides / top</td><td>2.0 / 18.0 mm</td></tr>
+        <tr><td>Margin outside the picture</td><td>3°</td></tr>
+        <tr><td>Hardware</td><td>2 × M3×12 countersunk + 2 × M3 nut</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Checks</h2>
+      <table>
+        <tr><td>Doorbell / plate vs hood</td><td><span class="pill ok">0 mm³</span></td></tr>
+        <tr><td>Hook-on sweep 10°, 15°, 20°</td><td><span class="pill ok">clear</span></td></tr>
+        <tr><td>Wall screws, plate screws and nuts (−1 to +5 mm)</td><td><span class="pill ok">clear</span></td></tr>
+        <tr><td>Back edge flush to the wall</td><td><span class="pill ok">yes</span></td></tr>
+        <tr><td>Lock screw and screwdriver from below</td><td><span class="pill ok">clear</span></td></tr>
+        <tr><td>Camera image covered</td><td><span class="pill ok">0%</span></td></tr>
+        <tr><td>STL watertight, 1 body, no voids</td><td><span class="pill ok">yes</span></td></tr>
+      </table>
+    </section>
+  </aside>
+</div>
+
+<script src="meshes.js"></script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { STLLoader } from "three/addons/loaders/STLLoader.js";
+
+const canvas = document.getElementById("c");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene();
+const cam = new THREE.PerspectiveCamera(30, 1, 1, 4000);
+const controls = new OrbitControls(cam, canvas);
+controls.enableDamping = true;
+const TARGET = new THREE.Vector3(0, -60, 15);
+controls.target.copy(TARGET);
+
+const dark = () => matchMedia("(prefers-color-scheme: dark)").matches && document.documentElement.dataset.theme !== "light" || document.documentElement.dataset.theme === "dark";
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f8a, 0.55));
+const sun = new THREE.DirectionalLight(0xfff1dc, 2.4);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -120, right: 120, top: 120, bottom: -120, near: 1, far: 800 });
+sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.3;
+sun.target.position.set(0, -60, 15);
+scene.add(sun, sun.target);
+
+// wall
+const wallMat = new THREE.MeshStandardMaterial({ color: 0xe9e1cf, roughness: 0.95 });
+const wall = new THREE.Mesh(new THREE.PlaneGeometry(260, 300), wallMat);
+wall.position.set(-22.0, -60, -0.8199999999999998); wall.lookAt(wall.position.clone().add(new THREE.Vector3(0.3420201433256687, 0, 0.9396926207859084))); wall.receiveShadow = true; scene.add(wall);
+
+const hoodMat = new THREE.MeshStandardMaterial({ color: 0x34373b, roughness: 0.6, metalness: 0.0, side: THREE.DoubleSide });
+const devMat = new THREE.MeshStandardMaterial({ color: 0x15171a, roughness: 0.35 });
+const plateMat = new THREE.MeshStandardMaterial({ color: 0x9aa0a6, metalness: 0.6, roughness: 0.4 });
+
+const loader = new STLLoader();
+const load = (n) => { const s = atob(window.MESHES[n]); const u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return loader.parse(u.buffer); };
+const [gH, gD, gP] = [load("hood"), load("device"), load("plate")];
+[gH, gD, gP].forEach((g) => g.computeVertexNormals());
+const hood = new THREE.Mesh(gH, hoodMat); hood.castShadow = hood.receiveShadow = true;
+const devGroup = new THREE.Group();
+const dev = new THREE.Mesh(gD, devMat); dev.castShadow = dev.receiveShadow = true;
+// lens + button details for orientation
+const lens = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.2, 1.2, 40), new THREE.MeshStandardMaterial({ color: 0x0b0d10, roughness: 0.15, metalness: 0.4 }));
+lens.rotation.x = Math.PI / 2; lens.position.set(0, -14.6, 28.9);
+const btn = new THREE.Mesh(new THREE.BoxGeometry(17, 52, 0.8), new THREE.MeshStandardMaterial({ color: 0x3a3e43, roughness: 0.7 }));
+btn.position.set(0, -68, 28.8);
+devGroup.add(dev, lens, btn);
+const plate = new THREE.Mesh(gP, plateMat);
+scene.add(hood, devGroup, plate);
+
+// tilt pivot: top-back edge of the doorbell (y = 0, z = 2.2)
+const pivot = new THREE.Group(); pivot.position.set(0, 0, 2.2); scene.add(pivot);
+devGroup.position.set(0, 0, -2.2); pivot.add(devGroup);
+
+// sunlit sampling on the doorbell (front, sides, top) for the readout
+const LENS = new THREE.Vector3(0, -14.6, 29.1);
+const samples = [];
+(() => {
+  const pos = gD.attributes.position, nrm = gD.attributes.normal;
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i += 3) {
+    a.fromBufferAttribute(pos, i); b.fromBufferAttribute(pos, i + 1); c.fromBufferAttribute(pos, i + 2);
+    const n = new THREE.Vector3().subVectors(b, a).cross(new THREE.Vector3().subVectors(c, a));
+    const area = n.length() / 2; n.normalize();
+    if (n.z < -0.5) continue;               // skip the back (against the wall)
+    const k = Math.max(1, Math.round(area / 6));
+    for (let j = 0; j < k; j++) {
+      let r1 = Math.random(), r2 = Math.random(); if (r1 + r2 > 1) { r1 = 1 - r1; r2 = 1 - r2; }
+      const p = a.clone().addScaledVector(new THREE.Vector3().subVectors(b, a), r1).addScaledVector(new THREE.Vector3().subVectors(c, a), r2);
+      samples.push({ p: p.addScaledVector(n, 0.05), n, w: area / k });
+    }
+  }
+})();
+const ray = new THREE.Raycaster();
+
+const $ = (id) => document.getElementById(id);
+// NOAA solar position, Doha (25.2854 N, 51.5310 E, UTC+3)
+const LAT = 25.2854, LON = 51.5310, TZ = 3;
+function solar(doy, hour) {
+  const g = 2 * Math.PI / 365 * (doy - 1 + (hour - 12) / 24);
+  const eqt = 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
+  const decl = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g) - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
+  const tst = hour * 60 + eqt + 4 * LON - 60 * TZ;
+  const ha = (tst / 4 - 180) * Math.PI / 180, la = LAT * Math.PI / 180;
+  const cz = Math.sin(la) * Math.sin(decl) + Math.cos(la) * Math.cos(decl) * Math.cos(ha);
+  const el = 90 - Math.acos(Math.max(-1, Math.min(1, cz))) * 180 / Math.PI;
+  let az = Math.atan2(Math.sin(ha), Math.cos(ha) * Math.sin(la) - Math.tan(decl) * Math.cos(la)) * 180 / Math.PI + 180;
+  return { el, az: (az + 360) % 360 };
+}
+function sunState() {
+  const s = solar(+$("date").value, +$("time").value / 60);
+  const wallDeg = (+$("facing").value || 150), camDeg = (wallDeg + 20) % 360;
+  $("camFacing").textContent = camDeg;
+  const f = camDeg * Math.PI / 180, fw = wallDeg * Math.PI / 180, e = s.el * Math.PI / 180, a = s.az * Math.PI / 180;
+  const east = Math.cos(e) * Math.sin(a), north = Math.cos(e) * Math.cos(a);
+  const rx = Math.sin(f - Math.PI / 2), ry = Math.cos(f - Math.PI / 2);
+  const d = new THREE.Vector3(east * rx + north * ry, Math.sin(e), east * Math.sin(f) + north * Math.cos(f)).normalize();
+  const wallZ = east * Math.sin(fw) + north * Math.cos(fw);
+  return { ...s, d, wallZ };
+}
+function update() {
+  const st = sunState(), d = st.d;
+  const t = +$("time").value;
+  $("timeV").textContent = String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0");
+  const up = st.el > 0, onWall = up && st.wallZ > 0 && d.z > -0.35;
+  $("sunPos").textContent = up ? `${st.el.toFixed(0)}° up, ${st.az.toFixed(0)}°` : "below horizon";
+  sun.visible = onWall;
+  sun.position.copy(sun.target.position).addScaledVector(d, 400);
+  if (!onWall) {
+    $("lensState").innerHTML = '<span class="pill ok">' + (up ? "sun behind the wall" : "night") + "</span>";
+    $("litPct").textContent = "0.0%"; $("litPct0").textContent = "0.0%";
+    return;
+  }
+  $("tiltV").textContent = $("tilt").value + "°";
+  pivot.rotation.x = -THREE.MathUtils.degToRad(+$("tilt").value);
+  // lens
+  ray.set(LENS, d); ray.far = 500;
+  const lensShaded = ray.intersectObject(hood, false).length > 0;
+  $("lensState").innerHTML = lensShaded ? '<span class="pill ok">in shade</span>' : '<span class="pill sun">in sun</span>';
+  // sunlit fraction (cosine-weighted irradiance) with vs without hood
+  let lit = 0, lit0 = 0, tot = 0;
+  for (const s of samples) {
+    const cos = s.n.dot(d); tot += s.w;
+    if (cos <= 0) continue;
+    lit0 += s.w * cos;
+    ray.set(s.p, d);
+    if (ray.intersectObject(hood, false).length === 0) lit += s.w * cos;
+  }
+  $("litPct").textContent = (100 * lit / tot).toFixed(1) + "%";
+  $("litPct0").textContent = (100 * lit0 / tot).toFixed(1) + "%";
+}
+let rafPending = false;
+for (const id of ["date", "time", "facing", "tilt"]) $(id).addEventListener("input", () => {
+  if (!rafPending) { rafPending = true; requestAnimationFrame(() => { rafPending = false; update(); }); }
+});
+$("showDev").addEventListener("change", (e) => { devGroup.visible = plate.visible = e.target.checked; });
+$("showWall").addEventListener("change", (e) => { wall.visible = e.target.checked; });
+$("xray").addEventListener("change", (e) => { hoodMat.transparent = e.target.checked; hoodMat.opacity = e.target.checked ? 0.35 : 1; hoodMat.depthWrite = !e.target.checked; });
+$("fovBtn").addEventListener("click", (e) => { const on = $("fovBox").hidden; $("fovBox").hidden = !on; e.target.setAttribute("aria-pressed", String(on)); });
+
+function view(dir, dist = 400) {
+  cam.position.copy(TARGET).addScaledVector(new THREE.Vector3(...dir).normalize(), dist);
+  controls.target.copy(TARGET); controls.update();
+}
+$("vFront").onclick = () => view([0, 0.05, 1]);
+$("vSide").onclick = () => view([1, 0.1, 0.25]);
+$("vIso").onclick = () => view([0.9, 0.55, 1]);
+$("vBack").onclick = () => { $("showWall").checked = false; wall.visible = false; view([0.35, 0.2, -1]); };
+
+function resize() {
+  const r = canvas.parentElement.getBoundingClientRect();
+  renderer.setSize(r.width, r.height, false);
+  cam.aspect = r.width / Math.max(1, r.height); cam.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(canvas.parentElement);
+resize(); view([0.75, 0.3, 1], 420); update();
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+controls.enableDamping = !reduce;
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, cam); });
+</script>

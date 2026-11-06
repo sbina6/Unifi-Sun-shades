@@ -1,0 +1,63 @@
+{
+ "static": {
+  "device_vs_part_overlap_mm3": 0.0,
+  "plate_vs_part_overlap_mm3": 0.0,
+  "device_to_shell_min_gap_mm": 2.0,
+  "part_behind_wall_mm3": 0.0,
+  "part_area_in_contact_band_mm3": 1210.4,
+  "paths": {
+   "wall screw (top) shank d3 through floor into anchor": 0.0,
+   "wall screw (top) head d5.8 in counterbore": 0.0,
+   "wall screw (top) screwdriver d6 x 150 along axis": 0.0,
+   "wall screw (top) floor under head (mm)": 3.0,
+   "wall screw (bottom) shank d3 through floor into anchor": 0.0,
+   "wall screw (bottom) head d5.8 in counterbore": 0.0,
+   "wall screw (bottom) screwdriver d6 x 150 along axis": 0.0,
+   "wall screw (bottom) floor under head (mm)": 3.0,
+   "plate screw (top, -1) M3x12 shank": 0.0,
+   "plate screw (top, -1) nut 5.5 AF x 2.4": 0.0,
+   "plate screw (top) tip clear of wall (mm)": 2.01,
+   "plate screw (top, +0) M3x12 shank": 0.0,
+   "plate screw (top, +0) nut 5.5 AF x 2.4": 0.0,
+   "plate screw (top, +2) M3x12 shank": 0.0,
+   "plate screw (top, +2) nut 5.5 AF x 2.4": 0.0,
+   "plate screw (top, +5) M3x12 shank": 0.0,
+   "plate screw (top, +5) nut 5.5 AF x 2.4": 0.0,
+   "plate screw (bottom, -1) M3x12 shank": 0.0,
+   "plate screw (bottom, -1) nut 5.5 AF x 2.4": 0.0,
+   "plate screw (bottom) tip clear of wall (mm)": 2.01,
+   "plate screw (bottom, +0) M3x12 shank": 0.0,
+   "plate screw (bottom, +0) nut 5.5 AF x 2.4": 0.0,
+   "plate screw (bottom, +2) M3x12 shank": 0.0,
+   "plate screw (bottom, +2) nut 5.5 AF x 2.4": 0.0,
+   "plate screw (bottom, +5) M3x12 shank": 0.0,
+   "plate screw (bottom, +5) nut 5.5 AF x 2.4": 0.0,
+   "lock screw + driver d6 from below at z=5.2": 0.0,
+   "lock screw + driver d6 from below at z=8.2": 0.0,
+   "lock screw + driver d6 from below at z=12.2": 0.0,
+   "PoE cable d8 from the wall at y=-80": 0.0,
+   "PoE cable d8 from the wall at y=-88": 0.0,
+   "PoE cable d8 from the wall at y=-95": 0.0
+  }
+ },
+ "install_sweep": {
+  "hook-on at 10 deg tilt, 4 mm lift": {
+   "max_overlap_mm3": 0.0,
+   "clashes": []
+  },
+  "hook-on at 15 deg tilt, 4 mm lift": {
+   "max_overlap_mm3": 0.0,
+   "clashes": []
+  },
+  "hook-on at 20 deg tilt, 4 mm lift": {
+   "max_overlap_mm3": 0.0,
+   "clashes": []
+  }
+ },
+ "camera_fov": {
+  "occluded_fraction": 0.0,
+  "occluded_outside_corners": 0.0,
+  "top_edge_centre_strip_occluded": 0.0,
+  "side_edge_centre_strip_occluded": 0.0
+ }
+}

@@ -8,7 +8,7 @@ os.environ.setdefault("CAD_VER", "v3")
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import verify as V0
 
-V = os.path.join(HERE, "..", "v3")
+V = os.path.join(HERE, "..", os.environ.get("CAD_VER", "v3"))
 G = json.load(open(os.path.join(V, "v3_geom.json")))
 
 
