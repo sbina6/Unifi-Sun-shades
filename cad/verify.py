@@ -7,7 +7,8 @@ import json, math, os, multiprocessing as mp
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-V = os.path.join(HERE, "..", "v1")
+VER = os.environ.get("CAD_VER", "v1")
+V = os.path.join(HERE, "..", VER)
 P = json.load(open(os.path.join(V, "params.json")))
 T_FL, MID_Y, ZF = P["T_FL"], P["MID_Y"], P["Z_FRONT"]
 

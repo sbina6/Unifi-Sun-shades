@@ -4,7 +4,8 @@ import numpy as np, trimesh
 from build123d import import_brep, export_stl, Rot, Pos
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-V = os.path.join(HERE, "..", "v1")
+VER = os.environ.get("CAD_VER", "v1")
+V = os.path.join(HERE, "..", VER)
 KIT = os.path.join(V, "print_kit")
 os.makedirs(KIT, exist_ok=True)
 
@@ -28,9 +29,9 @@ def check(path):
 
 parts = {}
 hood = orient(import_brep(os.path.join(V, "hood.brep")), TILT)
-export_stl(hood, os.path.join(KIT, "sunshade_hood_v1_TR300.stl"), tolerance=0.02, angular_tolerance=0.1)
+export_stl(hood, os.path.join(KIT, f"sunshade_hood_{VER}_TR300.stl"), tolerance=0.02, angular_tolerance=0.1)
 cp = import_brep(os.path.join(V, "coupon.brep"))
-export_stl(cp, os.path.join(KIT, "fit_test_coupon_v1_TR300.stl"), tolerance=0.01, angular_tolerance=0.1)
+export_stl(cp, os.path.join(KIT, f"fit_test_coupon_{VER}_TR300.stl"), tolerance=0.01, angular_tolerance=0.1)
 for f in sorted(os.listdir(KIT)):
     if f.endswith(".stl"):
         parts[f] = check(os.path.join(KIT, f))
@@ -41,30 +42,34 @@ for f, r in parts.items():
     shells = m.split(only_watertight=False)
     r["sealed_internal_voids"] = int(sum(1 for s in shells if s.volume < 0))
 # overhang check of the hood as oriented: down-facing area by angle from horizontal
-m = trimesh.load(os.path.join(KIT, "sunshade_hood_v1_TR300.stl"))
+m = trimesh.load(os.path.join(KIT, f"sunshade_hood_{VER}_TR300.stl"))
 nz = m.face_normals[:, 2]
 down = nz < -0.01
 ang = np.degrees(np.arcsin(np.clip(-nz[down], 0, 1)))       # 90 = flat ceiling
 area = m.area_faces[down]
-parts["sunshade_hood_v1_TR300.stl"]["down_facing_area_mm2"] = {
+parts[f"sunshade_hood_{VER}_TR300.stl"]["down_facing_area_mm2"] = {
     "steeper_than_45deg_from_horizontal_(self-supporting)": round(float(area[ang <= 45.5].sum()), 0),
     "flatter_than_45deg_(needs_support)": round(float(area[ang > 45.5].sum()), 0)}
 
-for f in ("sunshade_hood_v1.step", "fit_test_coupon_v1.step"):
+from build123d import export_step
+for nm, src in (("sunshade_hood", "hood.brep"), ("fit_test_coupon", "coupon.brep")):
+    f = f"{nm}_{VER}.step"
+    if not os.path.exists(os.path.join(V, f)):
+        export_step(import_brep(os.path.join(V, src)), os.path.join(V, f))
     shutil.copy(os.path.join(V, f), os.path.join(KIT, f))
 shutil.copy(os.path.join(V, "verify_report.json"), os.path.join(KIT, "verify_report.json"))
 
 manifest = dict(
-    kit="UniFi Doorbell Lite static sunshade", version="v1", date=str(datetime.date.today()),
+    kit="UniFi Doorbell Lite static sunshade", version=VER, date=str(datetime.date.today()),
     device="Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite), 137 x 40 x 26.4 mm",
     parts=[
-        dict(file="sunshade_hood_v1_TR300.stl", qty=1, material="Phrozen TR300",
+        dict(file=f"sunshade_hood_{VER}_TR300.stl", qty=1, material="Phrozen TR300",
              orientation=f"pre-oriented: long axis {TILT:.0f} deg from vertical, wall face toward the plate, roof up",
              supports="wall-side (back) face of the flange only + light supports under the roof underside; none on the flange front face (doorbell seat), none on the brim edge",
-             **parts["sunshade_hood_v1_TR300.stl"]),
-        dict(file="fit_test_coupon_v1_TR300.stl", qty=1, material="Phrozen TR300",
+             **parts[f"sunshade_hood_{VER}_TR300.stl"]),
+        dict(file=f"fit_test_coupon_{VER}_TR300.stl", qty=1, material="Phrozen TR300",
              orientation="axis-aligned, flat (do not tilt); measure 62.00 X / 62.00 Y / 56.60 Z",
-             supports="raft/light supports under the frame", **parts["fit_test_coupon_v1_TR300.stl"]),
+             supports="raft/light supports under the frame", **parts[f"fit_test_coupon_{VER}_TR300.stl"]),
     ],
     hardware="none extra for the flat mount (doorbell's own 2x M3 wall screws pass through the flange); wedge mount: 2x M3 plate screws ~2.5 mm longer than the kit's",
 )

@@ -1,0 +1,38 @@
+{
+ "static": {
+  "device_vs_hood_overlap_mm3": 0.0,
+  "plate_vs_hood_overlap_mm3": 0.0,
+  "device_to_walls_roof_min_gap_mm": 2.0,
+  "paths_overlap_mm3": {
+   "flat wall screw (74 c/c)": 0.0,
+   "wedge plate screw (92 c/c)": 0.0,
+   "tolerance -4 (66 c/c)": 0.0,
+   "tolerance +4 (100 c/c)": 0.0,
+   "wedge wall-screw head, 2 mm proud, d6 (78 c/c)": 0.0,
+   "lock screw + driver d6 from below at z=5.2": 0.0,
+   "lock screw + driver d6 from below at z=8.2": 0.0,
+   "lock screw + driver d6 from below at z=12.2": 0.0,
+   "PoE cable d8 at flat-mount hole": 0.0
+  }
+ },
+ "install_sweep": {
+  "hook-on at 10 deg tilt, 4 mm lift": {
+   "max_overlap_mm3": 0.0,
+   "clashes": []
+  },
+  "hook-on at 15 deg tilt, 4 mm lift": {
+   "max_overlap_mm3": 0.0,
+   "clashes": []
+  },
+  "hook-on at 20 deg tilt, 4 mm lift": {
+   "max_overlap_mm3": 0.0,
+   "clashes": []
+  }
+ },
+ "camera_fov": {
+  "occluded_fraction": 0.0,
+  "occluded_outside_corners": 0.0,
+  "top_edge_centre_strip_occluded": 0.0,
+  "side_edge_centre_strip_occluded": 0.0
+ }
+}

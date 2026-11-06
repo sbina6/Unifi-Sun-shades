@@ -1,0 +1,57 @@
+{
+ "kit": "UniFi Doorbell Lite static sunshade, tuned for a 150 deg wall in Doha",
+ "version": "v2",
+ "date": "2026-11-06",
+ "device": "Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite), 137 x 40 x 26.4 mm",
+ "parts": [
+  {
+   "file": "sunshade_hood_v2_TR300.stl",
+   "qty": 1,
+   "material": "Phrozen TR300",
+   "orientation": "pre-oriented: long axis 45 deg from vertical, wall face toward the plate, roof up",
+   "supports": "wall-side (back) face of the flange only + light supports under the roof underside; none on the flange front face (doorbell seat), none on the brim edge",
+   "watertight": true,
+   "bodies": 1,
+   "winding_ok": true,
+   "volume_mm3": 43892.8,
+   "mass_g_TR300": 51.4,
+   "min_z": 0.0,
+   "bbox_mm": [
+    48.4,
+    142.8,
+    136.8
+   ],
+   "sealed_internal_voids": 0,
+   "down_facing_area_mm2": {
+    "steeper_than_45deg_from_horizontal_(self-supporting)": 7795.0,
+    "flatter_than_45deg_(needs_support)": 0.0
+   }
+  },
+  {
+   "file": "fit_test_coupon_v2_TR300.stl",
+   "qty": 1,
+   "material": "Phrozen TR300",
+   "orientation": "axis-aligned, flat (do not tilt); measure 62.00 X / 62.00 Y / 56.60 Z",
+   "supports": "raft/light supports under the frame",
+   "watertight": true,
+   "bodies": 1,
+   "winding_ok": true,
+   "volume_mm3": 4277.6,
+   "mass_g_TR300": 5.0,
+   "min_z": 0.0,
+   "bbox_mm": [
+    62.0,
+    62.0,
+    56.6
+   ],
+   "sealed_internal_voids": 0
+  }
+ ],
+ "hardware": "none extra for the flat mount (doorbell's own 2x M3 wall screws pass through the flange); wedge mount: 2x M3 plate screws ~2.5 mm longer than the kit's",
+ "site": {
+  "location": "Doha, Qatar (25.29 N, 51.53 E)",
+  "wall_facing_deg": 150,
+  "tolerance_deg": 5,
+  "design_rule": "shade every sun direction outside the camera picture (3 deg margin); nothing inside it"
+ }
+}
