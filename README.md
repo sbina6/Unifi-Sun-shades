@@ -46,8 +46,8 @@
 | Feb 5 / Nov 6 | 06:25–15:35 | 49° | 37.1 / 20.6 / **16.9** |
 | Dec 21 | 06:25–16:05 | 41° | 35.8 / 22.0 / **18.0** |
 
-![Sun tracks in the camera picture](study/sun_in_camera_view.png)
-![Sun energy by day](study/sun_energy_by_day.png)
+![Sun tracks in the camera picture](study/sun_in_camera_view_v2.png)
+![Sun energy by day](study/sun_energy_by_day_v2.png)
 
 **What the study shows**
 - In summer, a 150° wall only gets morning sun: it rises in the ENE, on the camera's left, and passes behind the wall at about 11:45. The hot afternoon sun never reaches the doorbell. The morning sun comes in low from the side, so the side walls do most of the work.
@@ -61,3 +61,37 @@
 **Files:** `v2/sunshade_hood_v2.step`, `v2/print_kit/` (oriented STLs, PRINT_LIST.md, manifest.json, charts), [v2 viewer](https://claude.ai/artifact/JmiTdRrVQLvuYckmAQkXvR) (pick a date and time to see the sun on your wall).
 
 **Rebuild:** `python cad/sunshade_v2.py 20 20 v2 && CAD_VER=v2 python cad/verify.py && CAD_VER=v2 python cad/export_kit.py && python cad/v2_sweep.py <scratch> 150 && python cad/study_charts.py`
+
+## v3: one part that replaces the 20° wedge (doorbell turned toward the entrance)
+
+**Site:** Doha, wall facing 150°. The doorbell sits on the included 20° wedge, turned to the left as you face the wall, so the camera looks at about 170°.
+
+**What changed from v2**
+- **One part instead of two:** the printed part *is* the wedge. Its back sits flush on the wall, and the doorbell's metal plate screws to its front with 2 × M3 × 12 countersunk screws into nuts that slide in printed channels (travel −1/+5 mm, for plate holes 90–102 mm apart). The existing wall holes and screws are reused.
+- **Looks:** one continuous 2.2 mm shell with R10 top corners, instead of a box. The lip is a single smooth B-spline surface: one reach value per point around the hood's outline, kept under the camera-view limit on both the inner and outer surface, then smoothed. It reaches ~12 mm beside the lens and ~9 mm at the roof, and tucks back only where the fisheye corners look, giving the S-curve.
+- **Sun model:** the camera is at 170° and the wall at 150°; the wall's own shade is included.
+
+| Date | Sun energy on the doorbell, Wh/day (no shade → v3) | Cut |
+|---|---|---|
+| Jun 21 | 15.0 → 0.2 | 99% |
+| May 1 / Aug 12 | 19.4 → 3.0 | 85% |
+| Mar 21 / Sep 23 | 28.6 → 11.7 | 59% |
+| Feb 5 / Nov 6 | 36.4 → 20.8 | 43% |
+| Dec 21 | 37.6 → 23.6 | 37% |
+
+![Sun tracks in the camera picture, v3](study/sun_in_camera_view_v3.png)
+![Sun energy by day, v3](study/sun_energy_by_day_v3.png)
+
+**Checks** (`v3/verify_report.json`):
+- Camera picture covered: 0%.
+- No overlap with the doorbell or plate; 2.0 mm minimum gap.
+- Nothing behind the wall plane.
+- Hook-on sweep at 10°, 15° and 20° clear.
+- Clear paths: both wall screws (shank, head in its counterbore, Ø6 screwdriver along the axis), both plate screws and nuts across the full travel, the lock screw and driver from below, and the PoE cable.
+- Plate-screw tips stay 2.0 mm off the wall.
+- STL watertight, 1 body, no voids; 51 mm² flatter than 45°.
+- Mass 62.7 g. The mesh figure is used because OpenCascade over-reports the volume of the B-spline lip face by ~2.4 cm³; the mesh and B-rep cross-sections agree.
+
+**Files:** `v3/sunshade_v3.step`, `v3/print_kit/` (oriented STLs, PRINT_LIST.md, manifest.json, charts), [v3 viewer](https://claude.ai/artifact/4nZTFrGL5ToYtyeTtCPmqG).
+
+**Rebuild:** `python cad/sunshade_v3.py && python cad/coupon_v3.py v3 && python cad/verify_v3.py && CAD_VER=v3 python cad/export_kit.py && python cad/sun_eval.py v3/hood.brep study/v3_hood_170.json 170 150 && python cad/study_charts.py v3`

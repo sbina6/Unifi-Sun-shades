@@ -72,7 +72,9 @@ def dni(el):
 
 
 def eval_day(args):
-    hood_brep, doy, facing, step = args
+    hood_brep, doy, facing, step = args[:4]
+    wall_facing = args[4] if len(args) > 4 else facing
+    from sunpath import to_model
     from sunpath import day_track
     P = json.load(open(os.path.join(HERE, "..", "v1", "params.json")))
     lens = np.array(P["LENS"])
@@ -86,6 +88,12 @@ def eval_day(args):
     for s in day_track(doy, step, facing):
         d = s["d"]
         I = dni(s["el"])
+        if to_model(s["el"], s["az"], wall_facing)[2] <= 0:     # sun behind the wall plane
+            rows.append(dict(h=round(s["h"], 3), el=round(s["el"], 2), az=round(s["az"], 1),
+                             rel=[round(float(x), 4) for x in d], watts=0.0, watts_bare=0.0,
+                             lens_in_sun=False, sun_in_image=bool(in_image(d)[0]), lit_area_frac=0.0,
+                             behind_wall=True))
+            continue
         cos = nrm @ d
         lit_mask = cos > 0
         if hood_brep != "none" and lit_mask.any():
@@ -105,10 +113,11 @@ def eval_day(args):
     return doy, rows
 
 
-def evaluate(hood_brep, facing, days, step=10):
+def evaluate(hood_brep, facing, days, step=10, wall_facing=None):
+    wall_facing = facing if wall_facing is None else wall_facing
     ctx = mp.get_context("spawn")
     with ctx.Pool(min(4, len(days))) as pool:
-        res = pool.map(eval_day, [(hood_brep, d, facing, step) for d in days.values()])
+        res = pool.map(eval_day, [(hood_brep, d, facing, step, wall_facing) for d in days.values()])
     out = {}
     for (name, doy), (_, rows) in zip(days.items(), res):
         hrs = step / 60
@@ -118,8 +127,9 @@ def evaluate(hood_brep, facing, days, step=10):
             Wh_bare=round(sum(r["watts_bare"] for r in rows) * hrs, 2),
             peak_W=round(max([r["watts"] for r in rows] + [0]), 2),
             lens_sun_hours=round(sum(r["lens_in_sun"] for r in rows) * hrs, 2),
-            sun_in_image_hours=round(sum(r["sun_in_image"] for r in rows) * hrs, 2),
+            sun_in_image_hours=round(sum(r["sun_in_image"] and not r.get("behind_wall") for r in rows) * hrs, 2),
             lens_sun_outside_image_hours=round(sum(r["lens_in_sun"] and not r["sun_in_image"] for r in rows) * hrs, 2),
+            wall_facing=wall_facing, camera_facing=facing,
             rows=rows)
     return out
 
@@ -128,7 +138,8 @@ if __name__ == "__main__":
     from sunpath import DAYS
     hood = sys.argv[1]
     facing = float(sys.argv[3]) if len(sys.argv) > 3 else 150.0
-    res = evaluate(hood, facing, DAYS)
+    wall = float(sys.argv[4]) if len(sys.argv) > 4 else facing
+    res = evaluate(hood, facing, DAYS, wall_facing=wall)
     json.dump(res, open(sys.argv[2], "w"))
     for k, v in res.items():
         print(f"{k:28s} Wh {v['Wh_on_doorbell']:6.2f} (bare {v['Wh_bare']:6.2f})  peak {v['peak_W']:5.2f} W  "

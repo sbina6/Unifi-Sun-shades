@@ -1,0 +1,74 @@
+{
+ "kit": "UniFi Doorbell Lite sunshade + 20 deg wedge in one part",
+ "version": "v3",
+ "date": "2026-11-06",
+ "device": "Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite), 137 x 40 x 26.4 mm",
+ "parts": [
+  {
+   "file": "sunshade_hood_v3_TR300.stl",
+   "qty": 1,
+   "material": "Phrozen TR300",
+   "orientation": "pre-oriented: long axis 45 deg from vertical, wall face toward the plate, roof up",
+   "supports": "wall-side face only (+ light supports where the slicer flags ~51 mm2 flatter than 45 deg); none on the seat face, nut channels or lip",
+   "watertight": true,
+   "bodies": 1,
+   "winding_ok": true,
+   "volume_mm3": 53584.3,
+   "mass_g_TR300": 62.7,
+   "min_z": 0.0,
+   "bbox_mm": [
+    48.4,
+    144.6,
+    147.9
+   ],
+   "sealed_internal_voids": 0,
+   "down_facing_area_mm2": {
+    "steeper_than_45deg_from_horizontal_(self-supporting)": 9551.0,
+    "flatter_than_45deg_(needs_support)": 51.0
+   }
+  },
+  {
+   "file": "fit_test_coupon_v3_TR300.stl",
+   "qty": 1,
+   "material": "Phrozen TR300",
+   "orientation": "axis-aligned, flat (do not tilt); measure 62.00 X / 62.00 Y / 56.60 Z; nut channels 5.6/5.7/5.8; holes 3.3/3.4/3.5",
+   "supports": "raft/light supports under the frame",
+   "watertight": true,
+   "bodies": 1,
+   "winding_ok": true,
+   "volume_mm3": 5339.3,
+   "mass_g_TR300": 6.2,
+   "min_z": 0.0,
+   "bbox_mm": [
+    62.0,
+    62.0,
+    56.6
+   ],
+   "sealed_internal_voids": 0
+  }
+ ],
+ "hardware": [
+  {
+   "job": "part to wall",
+   "item": "doorbell kit M3 wall screws + anchors (2), existing holes"
+  },
+  {
+   "job": "plate to part",
+   "item": "M3 x 12 stainless countersunk Phillips (2)",
+   "source": "voltaat.com, 5-pc pack QAR 1"
+  },
+  {
+   "job": "plate screw nuts",
+   "item": "M3 hex nut (2)",
+   "source": "voltaat.com, 5-pc pack QAR 1"
+  }
+ ],
+ "site": {
+  "location": "Doha, Qatar (25.29 N, 51.53 E)",
+  "wall_facing_deg": 150,
+  "doorbell_turn": "20 deg left (as seen facing the wall)",
+  "camera_facing_deg": 170,
+  "design_rule": "shade every sun direction outside the camera picture (3 deg margin); nothing inside it"
+ },
+ "replaces": "the doorbell's black 20 deg wedge"
+}
