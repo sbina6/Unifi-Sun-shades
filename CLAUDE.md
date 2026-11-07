@@ -1,5 +1,11 @@
 # CLAUDE.md: 3D-printed resin parts
 
+## The user's devices and site (read first)
+- Doorbell: **Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite)**, 137 × 40 × 26.4 mm, metal plate 31 × 125 × 1.6, wall screws M3 on the centreline 74 mm c/c, Ø18 cable hole 88 mm below the top. Geometry lives in `cad/sunshade.py` and `v3/v3_geom.json`.
+- Site: Doha, wall facing 150°, doorbell on a 20° wedge (v3/v4 replace it), camera looking ~170°.
+- The doorbell is mounted over a Qatar / UK BS 4662 switch box (75 mm opening, lugs 60.3 mm c/c); `adapter/` bridges it.
+- Any doorbell or mount request: start from this repo (check every branch) instead of asking the user for the model or dimensions, and design for the MSLA resin printer below, not FDM.
+
 ## Toolchain
 - CAD Python: `/tmp/cadenv/bin/python` (build123d 0.13.0, cadquery-ocp-novtk 8.0.1.1.0, shapely 2.2.0, trimesh 5.2.0, numpy 2.5.4, scipy 1.18.1, matplotlib 3.11.2, pillow, ezdxf). If it's missing, rebuild it:
   ```

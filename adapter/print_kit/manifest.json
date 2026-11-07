@@ -1,0 +1,55 @@
+{
+ "kit": "UniFi Doorbell Lite wall adapter for a Qatar / UK (BS 4662) square switch box",
+ "version": "adapter-1",
+ "date": "2026-11-07",
+ "device": "Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite), 137 x 40 x 26.4 mm",
+ "parts": [
+  {
+   "file": "wall_adapter_TR300.stl",
+   "qty": 1,
+   "material": "Phrozen TR300",
+   "orientation": "pre-oriented: long axis 45 deg from vertical, wall (back) side toward the build plate",
+   "supports": "back rim and rib edges only (they sit against the wall); none on the front face, countersinks, nut channels or cable window edge",
+   "watertight": true,
+   "bodies": 1,
+   "winding_ok": true,
+   "volume_mm3": 54015.3,
+   "mass_g_TR300": 63.2,
+   "min_z": 0.0,
+   "bbox_mm": [
+    86.0,
+    123.8,
+    123.8
+   ],
+   "sealed_internal_voids": 0,
+   "down_facing_area_mm2": {
+    "steeper_than_45deg_from_horizontal_(self-supporting)": 17456.0,
+    "flatter_than_45deg_(needs_support)": 0.0
+   }
+  },
+  {
+   "file": "fit_test_coupon_adapter_TR300.stl",
+   "qty": 1,
+   "material": "Phrozen TR300",
+   "orientation": "axis-aligned, flat (do not tilt); measure 62.00 X / 62.00 Y / 56.60 Z; nut channels 5.6/5.7/5.8; M3 holes 3.3/3.4/3.5; M3.5 box-screw hole 3.9 + 7.4 countersink",
+   "supports": "raft/light supports under the frame",
+   "watertight": true,
+   "bodies": 1,
+   "winding_ok": true,
+   "volume_mm3": 5575.4,
+   "mass_g_TR300": 6.5,
+   "min_z": 0.0,
+   "bbox_mm": [
+    62.0,
+    62.0,
+    56.6
+   ],
+   "sealed_internal_voids": 0
+  }
+ ],
+ "hardware": [
+  "2 x M3.5 countersunk box screws: the ones from the switch plate you removed (25 mm is standard)",
+  "2 x M3 x 12 stainless flat-head (countersunk) Phillips, Voltaat 5-pc pack",
+  "2 x M3 hex nut, Voltaat 5-pc pack"
+ ]
+}
