@@ -1,0 +1,220 @@
+<title>Doorbell Lite Sunshade v5</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=swap">
+<style>
+/* layout: full-bleed 3D stage with a narrow instrument rail (stacks under the stage on phones); same system as the v1-v4 viewers */
+:root {
+  --bg: #e7e9e6;          /* limestone wall grey */
+  --panel: #f6f7f5;
+  --fg: #1d2224;
+  --muted: #5d676a;
+  --line: #c9cec9;
+  --accent: #c8661d;      /* resin part highlight */
+  --ok: #2f7d4f;
+  --stage: #dfe2de;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #161a1b; --panel: #1e2324; --fg: #e4e8e6; --muted: #98a3a4; --line: #323a3b;
+  --accent: #e48a42; --ok: #5fbf86; --stage: #1b2021; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #161a1b; --panel: #1e2324; --fg: #e4e8e6; --muted: #98a3a4; --line: #323a3b;
+  --accent: #e48a42; --ok: #5fbf86; --stage: #1b2021; color-scheme: dark }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 14px; line-height: 1.45; }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 340px; height: 100%;
+  padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px)); }
+.stage { position: relative; background: var(--stage); min-height: 0; }
+canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.hint { position: absolute; left: 12px; bottom: 10px; font: 12px var(--mono); color: var(--muted); }
+.rail { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; min-width: 0;
+  padding-block: 20px 28px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 20px; }
+h1 { font: 600 24px/1.1 var(--display); letter-spacing: .01em; margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); margin: 6px 0 0; }
+section { display: flex; flex-direction: column; gap: 8px; }
+.label { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { font: 500 13px var(--body); padding: 8px 4px; background: transparent; color: var(--fg); border: 0; border-left: 1px solid var(--line); cursor: pointer; }
+.seg button:first-child { border-left: 0; }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--panel); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.row { display: flex; align-items: center; gap: 10px; }
+.row label { flex: 1; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.chk { display: flex; gap: 8px; align-items: center; }
+.chk input { accent-color: var(--accent); }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 13px; }
+dt { color: var(--muted); }
+dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+ul.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+ul.checks li { display: grid; grid-template-columns: 16px 1fr; gap: 6px; }
+ul.checks li::before { content: "✓"; color: var(--ok); font-weight: 600; }
+.note { font-size: 13px; color: var(--muted); margin: 0; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+th { font: 500 11px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+td.v5 { font-family: var(--mono); color: var(--accent); }
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: 62vh auto; height: auto; }
+  .rail { border-left: 0; border-top: 1px solid var(--line); }
+}
+</style>
+
+<div class="app">
+  <div class="stage">
+    <canvas id="c" aria-label="3D view of the one-piece sunshade on the switch box"></canvas>
+    <div class="hint">drag to orbit · scroll or pinch to zoom</div>
+  </div>
+  <aside class="rail">
+    <div>
+      <h1>Doorbell Lite sunshade v5</h1>
+      <p class="sub">One printed part: the v4 car-shade sunshade, the 20° wedge and a cover for the Qatar switch box. 57.2 g, where v4 plus the adapter was 134 g.</p>
+    </div>
+
+    <section>
+      <span class="label">Show</span>
+      <div class="seg" role="group" aria-label="What to show">
+        <button id="m-all" aria-pressed="true">Doorbell</button>
+        <button id="m-plate" aria-pressed="false">Plate only</button>
+        <button id="m-none" aria-pressed="false">Part only</button>
+      </div>
+    </section>
+
+    <section>
+      <span class="label">View</span>
+      <div class="seg" role="group" aria-label="Camera">
+        <button id="v-front" aria-pressed="true">Front</button>
+        <button id="v-side" aria-pressed="false">Side</button>
+        <button id="v-back" aria-pressed="false">Back</button>
+      </div>
+      <div class="row"><label for="explode">Pull the doorbell out</label><span id="explode-v" class="label">0 mm</span></div>
+      <input id="explode" type="range" min="0" max="60" step="1" value="0">
+      <label class="chk"><input id="wall" type="checkbox" checked> Show wall and switch box</label>
+    </section>
+
+    <section>
+      <span class="label">Sun on the doorbell, Doha, Wh/day</span>
+      <div class="tbl"><table>
+        <thead><tr><th>Date</th><th>No shade</th><th>v4</th><th>v5</th></tr></thead>
+        <tbody id="sun"><tr><td>Jun 21</td><td>15.0</td><td>0.2</td><td class="v5">0.2</td></tr>
+          <tr><td>May 1 / Aug 12</td><td>19.4</td><td>2.9</td><td class="v5">3.0</td></tr>
+          <tr><td>Mar 21 / Sep 23</td><td>28.6</td><td>11.7</td><td class="v5">11.8</td></tr>
+          <tr><td>Feb 5 / Nov 6</td><td>36.4</td><td>20.9</td><td class="v5">21.1</td></tr>
+          <tr><td>Dec 21</td><td>37.6</td><td>23.6</td><td class="v5">23.8</td></tr></tbody>
+      </table></div>
+      <p class="note">Same outer shape and lip as v4, so the same shade. A bigger shade would add almost nothing: reach 20 → 60 mm changed winter by 2% and summer by 0 in the v2 sweep, because the remaining sun comes from inside the camera's picture.</p>
+    </section>
+
+    <section>
+      <span class="label">Box screws</span>
+      <dl>
+        <dt>Hidden</dt><dd>inside the wedge, through a Ø7.5 hole in the seat; the plate and doorbell cover it</dd>
+        <dt>Visible</dt><dd>flush on the cover plate, beside the shade</dd>
+        <dt>Doorbell</dt><dd>17 mm to one side of the box centre</dd>
+      </dl>
+    </section>
+
+    <section>
+      <span class="label">Checks (verify_report.json)</span>
+      <ul class="checks">
+        <li>Doorbell and plate: 0 mm³ overlap, 2.4 mm side gap</li>
+        <li>Hook-on at 10°, 15°, 20° tilt with 4 mm lift: clear</li>
+        <li>Camera picture covered: 0%</li>
+        <li>Box screws, Ø6 drivers, plate screws, nuts, lock screw and cable: 30 paths, 0 mm³ of plastic</li>
+        <li>Switch box hidden from the front, apart from the visible screw's own hole</li>
+        <li>STL watertight, 1 body, no sealed voids</li>
+      </ul>
+    </section>
+  </aside>
+</div>
+
+<script src="meshes.js"></script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { STLLoader } from "three/addons/loaders/STLLoader.js";
+
+const D = window.MESHES._dims;
+const canvas = document.getElementById("c");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const scene = new THREE.Scene();
+const cam = new THREE.PerspectiveCamera(30, 1, 1, 4000);
+const controls = new OrbitControls(cam, canvas);
+controls.enableDamping = true;
+const TARGET = new THREE.Vector3(-8, 10, 15);
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f8a, 1.1));
+const key = new THREE.DirectionalLight(0xfff4e6, 2.0); key.position.set(150, 220, 260); scene.add(key);
+const fill = new THREE.DirectionalLight(0xdfe8ff, 0.7); fill.position.set(-200, -60, -180); scene.add(fill);
+
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const loader = new STLLoader();
+function load(name, color, opts = {}) {
+  const bin = Uint8Array.from(atob(window.MESHES[name]), c => c.charCodeAt(0)).buffer;
+  const g = loader.parse(bin); g.computeVertexNormals();
+  const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color, roughness: .55, metalness: opts.metal ?? 0, side: THREE.DoubleSide, flatShading: !!opts.flat }));
+  scene.add(m); return m;
+}
+const part = load("part", 0x3a3f42, { flat: true });
+const doorbell = [load("device", 0x1f2224)];
+const plate = [load("plate", 0x9aa0a4, { metal: .6 })];
+
+// wall with the 75 mm box opening, and the box behind it
+const wallGrp = new THREE.Group(); scene.add(wallGrp);
+const wallMat = new THREE.MeshStandardMaterial({ color: 0xcfcfc8, roughness: .95, side: THREE.DoubleSide });
+{
+  const s = new THREE.Shape(); s.moveTo(-160, -180); s.lineTo(160, -180); s.lineTo(160, 220); s.lineTo(-160, 220); s.closePath();
+  const h = new THREE.Path(), b = D.BOX / 2; h.moveTo(-b, -b); h.lineTo(-b, b); h.lineTo(b, b); h.lineTo(b, -b); h.closePath(); s.holes.push(h);
+  const w = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: 20, bevelEnabled: false }), wallMat);
+  w.position.z = -20; wallGrp.add(w);
+  const boxMat = new THREE.MeshStandardMaterial({ color: 0x8e9396, roughness: .6, metalness: .3, side: THREE.DoubleSide });
+  const depth = 35, t = 1;
+  for (const [x, y, sx, sy] of [[b, 0, t, D.BOX], [-b, 0, t, D.BOX], [0, b, D.BOX, t], [0, -b, D.BOX, t]]) {
+    const p = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, depth), boxMat); p.position.set(x, y, -depth / 2); wallGrp.add(p);
+  }
+  const back = new THREE.Mesh(new THREE.BoxGeometry(D.BOX, D.BOX, t), boxMat); back.position.z = -depth; wallGrp.add(back);
+  for (const sx of [-1, 1]) {   // screw lugs
+    const lug = new THREE.Mesh(new THREE.BoxGeometry(8, 10, 3), boxMat); lug.position.set(sx * (b - 4), 0, -1.5); wallGrp.add(lug);
+  }
+}
+
+let mode = "all", explode = 0;
+function apply() {
+  for (const m of doorbell) { m.visible = mode === "all"; m.position.z = explode; }
+  for (const m of plate) { m.visible = mode !== "none"; m.position.z = explode * 0.5; }
+  document.getElementById("explode-v").textContent = explode + " mm";
+}
+function press(ids, id) { for (const i of ids) document.getElementById(i).setAttribute("aria-pressed", String(i === id)); }
+for (const k of ["all", "plate", "none"]) document.getElementById("m-" + k).addEventListener("click", () => { mode = k; press(["m-all", "m-plate", "m-none"], "m-" + k); apply(); });
+const VIEWS = { front: [60, 110, 430], side: [-440, 60, 140], back: [-120, 90, -400] };
+function view(k) {
+  const [x, y, z] = VIEWS[k]; cam.position.set(x, y, z); controls.target.copy(TARGET); controls.update();
+  press(["v-front", "v-side", "v-back"], "v-" + k);
+  if (k === "back") { document.getElementById("wall").checked = false; wallGrp.visible = false; }
+}
+for (const k of Object.keys(VIEWS)) document.getElementById("v-" + k).addEventListener("click", () => view(k));
+document.getElementById("explode").addEventListener("input", e => { explode = +e.target.value; apply(); });
+document.getElementById("wall").addEventListener("change", e => { wallGrp.visible = e.target.checked; });
+
+function resize() {
+  const r = canvas.parentElement.getBoundingClientRect();
+  renderer.setSize(r.width, r.height, false); cam.aspect = r.width / Math.max(1, r.height); cam.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(canvas.parentElement);
+apply(); view("front"); resize();
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, cam); });
+window.__setView = (k, m, e, w) => { if (m) document.getElementById("m-" + m).click(); if (e != null) { explode = e; apply(); } view(k); if (w != null) wallGrp.visible = w; };
+</script>

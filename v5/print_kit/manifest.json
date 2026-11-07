@@ -1,0 +1,77 @@
+{
+ "kit": "UniFi Doorbell Lite: v4 car-shade sunshade + 20 deg wedge + Qatar/BS 4662 switch-box cover in one lighter part",
+ "version": "v5",
+ "date": "2026-11-07",
+ "device": "Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite), 137 x 40 x 26.4 mm",
+ "parts": [
+  {
+   "file": "sunshade_hood_v5_TR300.stl",
+   "qty": 1,
+   "material": "Phrozen TR300",
+   "orientation": "pre-oriented: long axis 45 deg from vertical, wall face toward the plate, roof up",
+   "supports": "wall-side face only (wedge back edge, back of the cover plate); the 0.6 mm lattice/rib ledges print unsupported; none on the seat face, nut channels, lip or countersink",
+   "watertight": true,
+   "bodies": 1,
+   "winding_ok": true,
+   "volume_mm3": 48915.0,
+   "mass_g_TR300": 57.2,
+   "min_z": 0.0,
+   "bbox_mm": [
+    81.5,
+    144.8,
+    152.0
+   ],
+   "sealed_internal_voids": 0,
+   "down_facing_area_mm2": {
+    "steeper_than_45deg_from_horizontal_(self-supporting)": 13311.0,
+    "flatter_than_45deg_(needs_support)": 948.0
+   }
+  },
+  {
+   "file": "fit_test_coupon_v5_TR300.stl",
+   "qty": 1,
+   "material": "Phrozen TR300",
+   "orientation": "axis-aligned, flat (do not tilt); measure 62.00 X / 62.00 Y / 56.60 Z; nut channels 5.6/5.7/5.8; M3 holes 3.3/3.4/3.5; M3.5 box-screw hole 3.9 + 7.4 countersink",
+   "supports": "raft/light supports under the frame",
+   "watertight": true,
+   "bodies": 1,
+   "winding_ok": true,
+   "volume_mm3": 5575.4,
+   "mass_g_TR300": 6.5,
+   "min_z": 0.0,
+   "bbox_mm": [
+    62.0,
+    62.0,
+    56.6
+   ],
+   "sealed_internal_voids": 0
+  }
+ ],
+ "hardware": [
+  "2 x M3.5 countersunk box screws from the old switch plate",
+  "2 x M3 x 12 stainless flat-head (countersunk) Phillips, Voltaat 5-pc pack",
+  "2 x M3 hex nut, Voltaat 5-pc pack"
+ ],
+ "sun_Wh_per_day_doha_150_wall_170_camera": {
+  "Jun 21 (summer)": {
+   "no_shade": 15.02,
+   "v5": 0.2
+  },
+  "May 1 / Aug 12": {
+   "no_shade": 19.4,
+   "v5": 2.97
+  },
+  "Mar 21 / Sep 23 (equinox)": {
+   "no_shade": 28.65,
+   "v5": 11.78
+  },
+  "Feb 5 / Nov 6": {
+   "no_shade": 36.38,
+   "v5": 21.07
+  },
+  "Dec 21 (winter)": {
+   "no_shade": 37.62,
+   "v5": 23.82
+  }
+ }
+}

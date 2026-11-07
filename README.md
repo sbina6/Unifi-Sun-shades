@@ -143,3 +143,46 @@ wall + switch box  →  adapter  →  metal plate (flat)  or  20° wedge / v3 / 
 **Files:** `adapter/wall_adapter.step`, `adapter/print_kit/` (oriented STLs, PRINT_LIST.md, manifest.json), `adapter/doorbell_lite_wall_adapter_print_kit.zip`, [viewer](https://claude.ai/artifact/23ztJJo4jVdEdtzdfDb4Y9).
 
 **Rebuild:** `python cad/wall_adapter.py && python cad/verify_adapter.py && python cad/adapter_viewer.py && node cad/adapter_shots.js && python cad/export_adapter.py`
+
+## v5: sunshade, wedge and switch-box cover in one lighter part
+
+One Phrozen TR300 part, **57.2 g**: v4's car-shade sunshade, the 20° wedge, and a cover for the Qatar / BS 4662 switch box. v4 alone was 70.7 g, and v4 plus the separate wall adapter was 134 g. It screws to the box with the box's own two screws, and the doorbell sits flush on the wall again.
+
+![v5 views](v5/v5_views.png)
+
+**Box screws:** the lugs are 60.3 mm apart and the shade is wider than that, so in one piece it would sit over both. The doorbell therefore sits 17.15 mm to one side of the box centre:
+- one screw lands inside the wedge, driven through a Ø7.5 hole in the seat that the metal plate and doorbell then cover;
+- the other lands on a flat 2.0 mm cover "ear" beside the shade, countersunk flush.
+
+**How the weight came off:**
+- shell 2.2 → 1.8 mm, and it is also the wedge's side wall (v4 had two walls side by side there);
+- seat skin 2.4 → 2.0 mm with S-diamond windows under the doorbell;
+- no wall-screw bosses or centre spine;
+- nut blocks trimmed to 9.2 × 16;
+- lattice relief 0.9 → 0.6 mm;
+- 2.0 mm cover plate.
+
+**Sun (Doha, 150° wall, camera at 170°; `study/v5_hood_170.json`):** the outer shape and lip are v4's, so the shading is the same to within 1%.
+
+| Date | No shade | v4 | v5 (Wh/day on the doorbell) |
+|---|---|---|---|
+| Jun 21 | 15.0 | 0.19 | 0.20 |
+| May 1 / Aug 12 | 19.4 | 2.93 | 2.97 |
+| Mar 21 / Sep 23 | 28.6 | 11.7 | 11.8 |
+| Feb 5 / Nov 6 | 36.4 | 20.9 | 21.1 |
+| Dec 21 | 37.6 | 23.7 | 23.8 |
+
+**Why it isn't bigger:** in the v2 sweep (`study/sweep_150.json`), going from 20 mm to 60 mm of reach made no difference in summer (2.2 Wh/day both) and only 2% in winter (18.0 → 17.5). The lip already stops at the edge of the camera's picture, and the remaining sun comes from inside the picture, where any shade would show in the video. A bigger shade could only change the look, and it would add weight.
+
+**Checks (`v5/verify_report.json`):**
+- Doorbell and plate: 0 mm³ overlap, 2.4 mm side gap. Nothing behind the wall plane.
+- Hook-on at 10°, 15° and 20° tilt with a 4 mm lift: clear.
+- Camera picture covered: 0%.
+- 30 paths clear of plastic: both box screws (shank, flush head, Ø6 × 150 driver), plate screws and nuts across the slot travel, lock screw and driver, and the PoE cable.
+- From the front, the switch box is hidden except for the visible screw's own hole, which the screw fills.
+- STL watertight, 1 body, no sealed voids, 152 mm tall as printed (same as v4).
+- Roof stress is estimated, not computed: the shell is 1.8 mm, but the R34 barrel vault carries a load mostly as an arch, so the v1 pigeon case (12 N) is well under 10 MPa.
+
+**Files:** `v5/sunshade_hood_v5.step`, `v5/print_kit/` (oriented STLs, PRINT_LIST.md, manifest.json), `v5/sunshade_doorbell_lite_v5_print_kit.zip`, [v5 viewer](https://claude.ai/artifact/EjEeACi4wuyu7NsmFokM8P).
+
+**Rebuild:** `python cad/sunshade_v5.py && python cad/verify_v5.py && python cad/sun_eval.py v5/hood.brep study/v5_hood_170.json 170 150 && CAD_VER=v5 python cad/export_kit.py && python cad/v5_viewer.py && node cad/v5_shots.js` (`sun_eval.py` reads `v1/device.brep`; `cad/sunshade.py` writes it.)
