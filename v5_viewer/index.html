@@ -54,12 +54,13 @@ ul.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-directi
 ul.checks li { display: grid; grid-template-columns: 16px 1fr; gap: 6px; }
 ul.checks li::before { content: "✓"; color: var(--ok); font-weight: 600; }
 .note { font-size: 13px; color: var(--muted); margin: 0; }
+.seg.two { grid-template-columns: 1fr 1fr; }
 .tbl { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-size: 13px; }
 th, td { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
 th:first-child, td:first-child { text-align: left; }
 th { font: 500 11px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-td.v5 { font-family: var(--mono); color: var(--accent); }
+td.hl { font-family: var(--mono); color: var(--accent); }
 @media (max-width: 760px) {
   .app { grid-template-columns: 1fr; grid-template-rows: 62vh auto; height: auto; }
   .rail { border-left: 0; border-top: 1px solid var(--line); }
@@ -74,8 +75,17 @@ td.v5 { font-family: var(--mono); color: var(--accent); }
   <aside class="rail">
     <div>
       <h1>Doorbell Lite sunshade v5</h1>
-      <p class="sub">One printed part: the v4 car-shade sunshade, the 20° wedge and a cover for the Qatar switch box. 57.2 g, where v4 plus the adapter was 134 g.</p>
+      <p class="sub">One printed part: sunshade, 20° wedge and switch-box cover, centred on the Qatar switch box. Two shapes to choose from.</p>
     </div>
+
+    <section>
+      <span class="label">Variant</span>
+      <div class="seg two" role="group" aria-label="Variant">
+        <button id="var-a" aria-pressed="true">A · centred v4 shape</button>
+        <button id="var-b" aria-pressed="false">B · box-sized</button>
+      </div>
+      <dl id="facts"></dl>
+    </section>
 
     <section>
       <span class="label">Show</span>
@@ -101,35 +111,20 @@ td.v5 { font-family: var(--mono); color: var(--accent); }
     <section>
       <span class="label">Sun on the doorbell, Doha, Wh/day</span>
       <div class="tbl"><table>
-        <thead><tr><th>Date</th><th>No shade</th><th>v4</th><th>v5</th></tr></thead>
-        <tbody id="sun"><tr><td>Jun 21</td><td>15.0</td><td>0.2</td><td class="v5">0.2</td></tr>
-          <tr><td>May 1 / Aug 12</td><td>19.4</td><td>2.9</td><td class="v5">3.0</td></tr>
-          <tr><td>Mar 21 / Sep 23</td><td>28.6</td><td>11.7</td><td class="v5">11.8</td></tr>
-          <tr><td>Feb 5 / Nov 6</td><td>36.4</td><td>20.9</td><td class="v5">21.1</td></tr>
-          <tr><td>Dec 21</td><td>37.6</td><td>23.6</td><td class="v5">23.8</td></tr></tbody>
+        <thead><tr><th>Date</th><th>No shade</th><th>v4</th><th>A</th><th>B</th></tr></thead>
+        <tbody id="sun"><tr><td>Jun 21</td><td>15.0</td><td>0.2</td><td class="hl">0.2</td><td class="hl">0.5</td></tr>
+          <tr><td>May 1 / Aug 12</td><td>19.4</td><td>2.9</td><td class="hl">3.0</td><td class="hl">5.8</td></tr>
+          <tr><td>Mar 21 / Sep 23</td><td>28.6</td><td>11.7</td><td class="hl">11.8</td><td class="hl">17.7</td></tr>
+          <tr><td>Feb 5 / Nov 6</td><td>36.4</td><td>20.9</td><td class="hl">21.1</td><td class="hl">26.3</td></tr>
+          <tr><td>Dec 21</td><td>37.6</td><td>23.6</td><td class="hl">23.8</td><td class="hl">27.6</td></tr></tbody>
       </table></div>
-      <p class="note">Same outer shape and lip as v4, so the same shade. A bigger shade would add almost nothing: reach 20 → 60 mm changed winter by 2% and summer by 0 in the v2 sweep, because the remaining sun comes from inside the camera's picture.</p>
     </section>
 
-    <section>
-      <span class="label">Box screws</span>
-      <dl>
-        <dt>Hidden</dt><dd>inside the wedge, through a Ø7.5 hole in the seat; the plate and doorbell cover it</dd>
-        <dt>Visible</dt><dd>flush on the cover plate, beside the shade</dd>
-        <dt>Doorbell</dt><dd>17 mm to one side of the box centre</dd>
-      </dl>
-    </section>
+    <p class="note">B's wider hood leaves 10–16 mm gaps beside the doorbell, so low side sun gets in: it lets in about 1.5–2× more sun than A outside midsummer. A shades exactly like v4.</p>
 
     <section>
       <span class="label">Checks (verify_report.json)</span>
-      <ul class="checks">
-        <li>Doorbell and plate: 0 mm³ overlap, 2.4 mm side gap</li>
-        <li>Hook-on at 10°, 15°, 20° tilt with 4 mm lift: clear</li>
-        <li>Camera picture covered: 0%</li>
-        <li>Box screws, Ø6 drivers, plate screws, nuts, lock screw and cable: 30 paths, 0 mm³ of plastic</li>
-        <li>Switch box hidden from the front, apart from the visible screw's own hole</li>
-        <li>STL watertight, 1 body, no sealed voids</li>
-      </ul>
+      <ul class="checks" id="checks"><li>Doorbell and plate: 0 mm³ overlap (side gap A 2.4 mm, B 3.6 mm)</li><li>Hook-on at 10°, 15°, 20° tilt with 4 mm lift: clear on both</li><li>Camera picture covered: 0% on both</li><li>Screws, Ø6 drivers, plate nuts, lock screw and cable: A 28 paths, B 30 paths, 0 mm³ of plastic</li><li>Switch box hidden from the front on both</li><li>STLs watertight, 1 body, no sealed voids; only 0.6 mm lattice ledges below 45°</li></ul>
     </section>
   </aside>
 </div>
@@ -154,7 +149,7 @@ const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(30, 1, 1, 4000);
 const controls = new OrbitControls(cam, canvas);
 controls.enableDamping = true;
-const TARGET = new THREE.Vector3(-8, 10, 15);
+const TARGET = new THREE.Vector3(0, 10, 18);
 
 scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f8a, 1.1));
 const key = new THREE.DirectionalLight(0xfff4e6, 2.0); key.position.set(150, 220, 260); scene.add(key);
@@ -168,9 +163,12 @@ function load(name, color, opts = {}) {
   const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color, roughness: .55, metalness: opts.metal ?? 0, side: THREE.DoubleSide, flatShading: !!opts.flat }));
   scene.add(m); return m;
 }
-const part = load("part", 0x3a3f42, { flat: true });
-const doorbell = [load("device", 0x1f2224)];
-const plate = [load("plate", 0x9aa0a4, { metal: .6 })];
+const V = {};
+for (const k of ["v5a", "v5b"]) V[k] = { part: load(k + "_part", 0x3a3f42, { flat: true }), device: load(k + "_device", 0x1f2224), plate: load(k + "_plate", 0x9aa0a4, { metal: .6 }) };
+const FACTS = {
+  v5a: [["Mass", "58.0 g, TR300"], ["Size", "86 × 158 mm on the wall"], ["Fixing", "2 × M3 + anchors, new holes 120 mm apart above and below the box, hidden under the plate"], ["Box screws", "not used"]],
+  v5b: [["Mass", "70.0 g, TR300"], ["Size", "86 × 160 mm on the wall"], ["Fixing", "the box's own 2 screws, inside the hood beside the wedge"], ["Drilling", "none"]],
+};
 
 // wall with the 75 mm box opening, and the box behind it
 const wallGrp = new THREE.Group(); scene.add(wallGrp);
@@ -191,15 +189,21 @@ const wallMat = new THREE.MeshStandardMaterial({ color: 0xcfcfc8, roughness: .95
   }
 }
 
-let mode = "all", explode = 0;
+let ver = "v5a", mode = "all", explode = 0;
 function apply() {
-  for (const m of doorbell) { m.visible = mode === "all"; m.position.z = explode; }
-  for (const m of plate) { m.visible = mode !== "none"; m.position.z = explode * 0.5; }
+  for (const [k, g] of Object.entries(V)) {
+    const on = k === ver;
+    g.part.visible = on;
+    g.device.visible = on && mode === "all"; g.device.position.z = explode;
+    g.plate.visible = on && mode !== "none"; g.plate.position.z = explode * 0.5;
+  }
   document.getElementById("explode-v").textContent = explode + " mm";
+  document.getElementById("facts").innerHTML = FACTS[ver].map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("");
 }
 function press(ids, id) { for (const i of ids) document.getElementById(i).setAttribute("aria-pressed", String(i === id)); }
+for (const k of ["a", "b"]) document.getElementById("var-" + k).addEventListener("click", () => { ver = "v5" + k; press(["var-a", "var-b"], "var-" + k); apply(); });
 for (const k of ["all", "plate", "none"]) document.getElementById("m-" + k).addEventListener("click", () => { mode = k; press(["m-all", "m-plate", "m-none"], "m-" + k); apply(); });
-const VIEWS = { front: [60, 110, 430], side: [-440, 60, 140], back: [-120, 90, -400] };
+const VIEWS = { front: [70, 110, 440], side: [-450, 60, 150], back: [-120, 90, -400] };
 function view(k) {
   const [x, y, z] = VIEWS[k]; cam.position.set(x, y, z); controls.target.copy(TARGET); controls.update();
   press(["v-front", "v-side", "v-back"], "v-" + k);
@@ -216,5 +220,5 @@ function resize() {
 new ResizeObserver(resize).observe(canvas.parentElement);
 apply(); view("front"); resize();
 renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, cam); });
-window.__setView = (k, m, e, w) => { if (m) document.getElementById("m-" + m).click(); if (e != null) { explode = e; apply(); } view(k); if (w != null) wallGrp.visible = w; };
+window.__setView = (k, m, e, w, v) => { if (v) document.getElementById("var-" + v).click(); if (m) document.getElementById("m-" + m).click(); if (e != null) { explode = e; apply(); } view(k); if (w != null) wallGrp.visible = w; };
 </script>

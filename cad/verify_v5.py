@@ -1,16 +1,17 @@
-"""Checks for v5 (one piece: v4 shade + wedge + switch-box cover). Run after sunshade_v5.py:
-    CAD_VER=v5 /tmp/cadenv/bin/python cad/verify_v5.py
+"""Checks for v5a / v5b (one piece: shade + wedge + switch-box cover). Run after sunshade_v5a/b.py:
+    /tmp/cadenv/bin/python cad/verify_v5.py v5a      (or v5b)
 Reuses verify.py's hook-on sweep and camera check; adds the box-screw, driver, plate-screw, cable,
 lock-screw, wall-flush and box-coverage checks. Heavy booleans run in a 'spawn' pool."""
 import json, os, sys, multiprocessing as mp
 import numpy as np
-os.environ["CAD_VER"] = "v5"
+VER = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1].startswith("v5") else os.environ.get("CAD_VER", "v5a")
+os.environ["CAD_VER"] = VER
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import verify as V0
 
-V = os.path.join(HERE, "..", "v5")
+V = os.path.join(HERE, "..", VER)
 G3 = json.load(open(os.path.join(V, "v3_geom.json")))
-G5 = json.load(open(os.path.join(V, "v5_geom.json")))
+G5 = json.load(open(os.path.join(V, "geom.json")))
 
 
 def static_checks(_):
@@ -29,17 +30,32 @@ def static_checks(_):
     behind = Plane(origin=pW, z_dir=-nW) * Pos(0, 0, 100) * Box(600, 600, 200)
     out["part_behind_wall_mm3"] = round(vol(part & behind), 4)
     paths = {}
-    # box screws: M3.5 shank, d7.0 countersunk head flush on its boss, d6 driver along the axis
-    bt = G5["boss_t"]
-    for nm, (p,) in G5["lug_wall_points"].items():
-        ax = Plane(origin=Vector(*p), z_dir=nW)
-        shank = ax * Pos(0, 0, -5) * Cylinder(1.75, bt + 5, align=(Align.CENTER, Align.CENTER, Align.MIN))
-        head = ax * Pos(0, 0, bt - 1.75) * Cone(1.75, 3.5, 1.75, align=(Align.CENTER, Align.CENTER, Align.MIN))
-        driver = ax * Pos(0, 0, bt + 0.3) * Cylinder(3.0, 150, align=(Align.CENTER, Align.CENTER, Align.MIN))
-        paths[f"box screw ({nm}) M3.5 shank into the lug"] = round(vol(part & shank), 4)
-        paths[f"box screw ({nm}) d7 countersunk head, flush"] = round(vol(part & head), 4)
-        paths[f"box screw ({nm}) screwdriver d6 x 150 along the axis"] = round(vol(part & driver), 4)
-        paths[f"box screw ({nm}) head vs doorbell plate / body (mm3)"] = round(vol((head + driver) & (plate + dev)) if nm == "visible" else vol(head & (plate + dev)), 4)
+    if G5["box_lugs_used"]:
+        # box screws: M3.5 shank, d7.0 countersunk head flush on its boss, d6 driver along the axis
+        # (driven before the doorbell goes on; the installed doorbell must not touch the head)
+        bt = G5["boss_t"]
+        for i, p in enumerate(G5["lug_points"]):
+            nm = ("left", "right")[i]
+            ax = Plane(origin=Vector(*p), z_dir=nW)
+            shank = ax * Pos(0, 0, -5) * Cylinder(1.75, bt + 5, align=(Align.CENTER, Align.CENTER, Align.MIN))
+            head = ax * Pos(0, 0, bt - 1.75) * Cone(1.75, 3.5, 1.75, align=(Align.CENTER, Align.CENTER, Align.MIN))
+            driver = ax * Pos(0, 0, bt + 0.3) * Cylinder(3.0, 150, align=(Align.CENTER, Align.CENTER, Align.MIN))
+            paths[f"box screw ({nm}) M3.5 shank into the lug"] = round(vol(part & shank), 4)
+            paths[f"box screw ({nm}) d7 countersunk head, flush"] = round(vol(part & head), 4)
+            paths[f"box screw ({nm}) screwdriver d6 x 150 along the axis"] = round(vol(part & driver), 4)
+            paths[f"box screw ({nm}) head vs installed doorbell + plate"] = round(vol(head & (plate + dev)), 4)
+    else:
+        # wall screws (kit M3 + anchors) in counterbores square to the wall, as v3
+        fl = G5["wall_screw_floor"]
+        for i, p in enumerate(G5["wall_screws"]):
+            nm = ("top", "bottom")[i]
+            ax = Plane(origin=Vector(*p), z_dir=nW)
+            shank = ax * Pos(0, 0, -25) * Cylinder(1.5, 25 + fl, align=(Align.CENTER, Align.CENTER, Align.MIN))
+            head = ax * Pos(0, 0, fl + 0.05) * Cylinder(2.9, 2.4, align=(Align.CENTER, Align.CENTER, Align.MIN))
+            driver = ax * Pos(0, 0, fl + 2.5) * Cylinder(3.0, 150, align=(Align.CENTER, Align.CENTER, Align.MIN))
+            paths[f"wall screw ({nm}) d3 shank through the floor"] = round(vol(part & shank), 4)
+            paths[f"wall screw ({nm}) head d5.8 in counterbore"] = round(vol(part & head), 4)
+            paths[f"wall screw ({nm}) screwdriver d6 x 150 along the axis"] = round(vol(part & driver), 4)
     # plate screws on sliding nuts (as v3)
     for sgn, nm in ((+1, "top"), (-1, "bottom")):
         for dy in (-1.0, 0.0, 2.5, 5.0):
@@ -62,31 +78,30 @@ def static_checks(_):
 
 def coverage(_):
     """Box opening as seen from the front along the wall normal: covered by the part, the plate or
-    the doorbell. Triangles of all three projected onto the wall plane and unioned."""
+    the doorbell. Triangles of all three projected onto the wall plane and unioned. Screw holes
+    that a screw head fills are not counted."""
     import trimesh
     from build123d import import_brep, export_stl
-    from shapely.geometry import Polygon, box as sbox
+    from shapely.geometry import Polygon, Point, box as sbox
     from shapely.ops import unary_union
-    N = np.array(G5["wall_normal"]); U = np.array(G5["u_axis"]); O = np.array(G5["wall_origin"])
+    U = np.array(G5["u_axis"]); O = np.array(G5["box_centre"])
     polys = []
     for f in ("hood", "device", "plate"):
         p = os.path.join(V, f"_{f}_cov.brep.stl")
         export_stl(import_brep(os.path.join(V, f"{f}.brep")), p, tolerance=0.1, angular_tolerance=0.3)
         m = trimesh.load(p)
-        uv = np.stack([(m.vertices - O) @ U, m.vertices[:, 1]], 1)
+        uv = np.stack([(m.vertices - O) @ U, m.vertices[:, 1] - O[1]], 1)
         for tri in uv[m.faces]:
             pg = Polygon(tri)
             if pg.area > 1e-4:
                 polys.append(pg.buffer(0.02))
     cov = unary_union(polys)
-    c = G5["C_U"]; my = -68.5; h = G5["box"] / 2
-    box_open = sbox(c - h, my - h, c + h, my + h)
-    from shapely.geometry import Point
-    vis = G5["lug_wall_points"]["visible"][0]
-    screw = Point((np.array(vis) - O) @ U, vis[1]).buffer(3.5)       # the screw head fills its hole
-    gap = box_open.difference(cov)
-    return dict(box_opening_mm2=round(box_open.area, 1), uncovered_mm2=round(gap.area, 2),
-                uncovered_except_visible_screw_hole_mm2=round(gap.difference(screw).area, 3))
+    h = G5["box"] / 2
+    gap = sbox(-h, -h, h, h).difference(cov)
+    heads = [Point((np.array(p) - O) @ U, p[1] - O[1]).buffer(3.6) for p in G5.get("lug_points", [])]
+    rest = gap.difference(unary_union(heads)) if heads else gap
+    return dict(box_opening_mm2=round(4 * h * h, 1), uncovered_mm2=round(gap.area, 2),
+                uncovered_except_screw_holes_mm2=round(rest.area, 3))
 
 
 if __name__ == "__main__":
@@ -109,7 +124,7 @@ if __name__ == "__main__":
                                  clashes=[c for c in res[i * 15:(i + 1) * 15] if c[3] > 0.01])
                             for i, t in enumerate((10.0, 15.0, 20.0))}
     from build123d import import_brep, export_stl
-    export_stl(import_brep(os.path.join(V, "hood.brep")), "/tmp/_hood_fov_v5.stl", tolerance=0.05)
-    rep["camera_fov"] = V0.fov_check("/tmp/_hood_fov_v5.stl", os.path.join(V, "fov_overlay.png"))
+    export_stl(import_brep(os.path.join(V, "hood.brep")), f"/tmp/_hood_fov_{VER}.stl", tolerance=0.05)
+    rep["camera_fov"] = V0.fov_check(f"/tmp/_hood_fov_{VER}.stl", os.path.join(V, "fov_overlay.png"))
     json.dump(rep, open(os.path.join(V, "verify_report.json"), "w"), indent=1)
     print(json.dumps(rep, indent=1))

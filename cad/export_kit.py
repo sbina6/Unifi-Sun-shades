@@ -28,7 +28,14 @@ def check(path):
 
 
 parts = {}
-hood = orient(import_brep(os.path.join(V, "hood.brep")), TILT)
+hood = import_brep(os.path.join(V, "hood.brep"))
+_g = os.path.join(V, "geom.json")
+if os.path.exists(_g) and json.load(open(_g)).get("orient_in_wall_frame"):
+    # hood square to the WALL (v5b): tilt it in the wall frame, not the turned doorbell frame
+    from build123d import Plane, Vector
+    _G = json.load(open(_g))
+    hood = Plane(origin=Vector(*_G["box_centre"]), x_dir=Vector(*_G["u_axis"]), z_dir=Vector(*_G["wall_normal"])).to_local_coords(hood)
+hood = orient(hood, TILT)
 export_stl(hood, os.path.join(KIT, f"sunshade_hood_{VER}_TR300.stl"), tolerance=0.02, angular_tolerance=0.1)
 cp = import_brep(os.path.join(V, "coupon.brep"))
 export_stl(cp, os.path.join(KIT, f"fit_test_coupon_{VER}_TR300.stl"), tolerance=0.01, angular_tolerance=0.1)

@@ -1,21 +1,18 @@
-"""Sunshade v5: v4 (car-shade style, integrated 20 deg wedge) and the switch-box adapter in ONE
-lighter part. Fixes to a Qatar / UK BS 4662 square switch box with the box's own two screws.
+"""Sunshade v5a (centred): v4 (car-shade style, integrated 20 deg wedge) and a switch-box cover in
+ONE lighter part, centred on a Qatar / UK BS 4662 square switch box.
 
-Changes from v4 + adapter:
-- No separate adapter and no wall screws / anchors: a 2.5 mm cover plate on the wall closes the
-  box, merged with the wedge. The wedge's own back still sits flush on the wall.
-- Box screws (lugs 60.3 c/c, left/right of the box centre). In one piece the shade's side walls
-  would sit over both lugs, so the doorbell sits C_U = 17.15 mm to one side of the box centre:
-  - the "hidden" lug lands inside the wedge hollow; its screw goes in through a d7.5 access hole
-    in the seat, which the doorbell's metal plate then covers;
-  - the "visible" lug is clear of the shade on the cover plate, countersunk flush.
-- Lighter: shell 1.8 (was 2.2), wedge perimeter 1.8 (2.2), seat skin 2.0 (2.4) windowed all over,
-  no wall-screw bosses or centre spine, the shade's side walls double as the wedge's, nut blocks trimmed to 9.2 x 16, lattice relief 0.6 (0.9),
-  cover 2.0, cable window trimmed to 22 mm (clears the hidden lug's boss).
-- Unchanged: the outer surfaces, the lip (cut just outside the camera picture), vault ribs, side
-  lattice, plate screws on sliding nuts. The shading is the same as v4.
+- Centred: the shade's front view is centred on the box (C_U), on a symmetric 86 x 86 mm, 2.0 mm
+  backplate that hides the box.
+- The shade sits over both box lugs (60.3 c/c), so it is fixed like v4: the doorbell kit's 2 x M3
+  screws and anchors, square to the wall, heads in counterbores that open on the seat face under the
+  metal plate. New holes 120 mm apart (WALL_SCREW_DY = 60), above and below the box; the part is
+  the drilling template.
+- Lighter than v4: shell 1.8 (2.2) and it is also the wedge's side wall, seat skin 2.0 (2.4) with
+  S-diamond windows under the doorbell, no centre spine, nut blocks 9.2 x 16, lattice relief 0.6.
+- Unchanged: outer surfaces, the lip (just outside the camera picture), vault ribs, side lattice,
+  plate screws on sliding nuts. Shades like v4.
 
-Frame: the doorbell frame (see sunshade_v3.py).   usage: python cad/sunshade_v5.py [outdir]
+Frame: the doorbell frame (see sunshade_v3.py).   usage: python cad/sunshade_v5a.py [outdir]
 """
 import json, math, os, shutil, sys
 import numpy as np
@@ -34,18 +31,17 @@ v3.SKIN = 2.0
 v4.LAT_H = 0.6              # side lattice relief (was 0.9)
 NUT_BLOCK = (9.2, 16.0)     # x, y: 1.75 mm round the 5.7 x 12.6 nut channel (was 11 x 20)
 
-# ---- box and cover plate (wall frame: u along the wall, y up, n out of the wall) ----
+# ---- box, backplate and wall screws (wall frame: u along the wall, y up, n out of the wall) ----
 BOX = 75.0
 BOX_LUG = 60.3 / 2
-C_U = 17.15                 # box centre along u, from the doorbell's screw line (box centre y = MID_Y)
-COVER_MARGIN = 5.5          # past the box opening, like a switch plate (86 mm square)
+C_U = -3.0                  # box centre along u from the doorbell's screw line: centre of the shade's
+                            # front view (outer shell u -36.2..30.2), so the shade looks centred
+COVER_MARGIN = 5.5          # 86 mm square, like a switch plate
 COVER_T = 2.0
 COVER_R = 8.0
-BOSS_T = 3.5                # lug bosses: head seat
-BOSS_D_VIS, BOSS_D_HID = 13.0, 10.0
-BOX_HOLE, BOX_CSK = 3.9, 7.4
-ACCESS_D = 7.5              # driver access to the hidden lug, through the seat
-CABLE_X = (-10.0, 12.0)     # cable window x range at the seat (doorbell plate's d18 hole: +-9)
+WALL_SCREW_DY = 60.0        # new wall holes, 120 mm apart, above and below the box
+CB_D, CB_FLOOR, BOSS_R = 7.5, 3.0, 6.0
+CABLE_X = (-12.0, 12.0)
 
 G3 = json.load(open(os.path.join(HERE, "..", "v3", "v3_geom.json")))
 N = Vector(*G3["wall_normal"])
@@ -56,9 +52,14 @@ W0 = _q - N * ((_q - _P).dot(N))            # wall point under the top wall-scre
 WALL_PL = Plane(origin=(W0.X, 0, W0.Z), x_dir=U, z_dir=N)   # (u, y, n) -> doorbell frame
 
 
-def lugs():
-    """(u, y) of the two box lugs on the wall: hidden (inside the wedge), visible."""
-    return (C_U - BOX_LUG, v1.MID_Y), (C_U + BOX_LUG, v1.MID_Y)
+def wall_screw_axes():
+    """Plane per wall screw: origin on the wall, z along the wall normal (as v3)."""
+    out = []
+    for sgn in (+1, -1):
+        q = Vector(0, v1.MID_Y + sgn * WALL_SCREW_DY, v3.SEAT)
+        t = (q - v3.P_WALL).dot(N)
+        out.append(Plane(origin=q - N * t, z_dir=N))
+    return out
 
 
 def hollow_prism():
@@ -82,26 +83,20 @@ def wedge_body():
 
 
 def cover():
-    (uh, yh), (uv, yv) = lugs()
     half = BOX / 2 + COVER_MARGIN
     plate = WALL_PL * Pos(C_U, v1.MID_Y, 0) * extrude(RectangleRounded(2 * half, 2 * half, COVER_R), COVER_T)
-    plate -= hollow_prism()                      # inside the wedge the box opens into the hollow
-    plate += WALL_PL * Pos(uv, yv, 0) * Cylinder(BOSS_D_VIS / 2, BOSS_T, align=(Align.CENTER, Align.CENTER, Align.MIN))
-    plate += WALL_PL * Pos(uh, yh, 0) * Cylinder(BOSS_D_HID / 2, BOSS_T, align=(Align.CENTER, Align.CENTER, Align.MIN))
-    return plate
+    return plate - hollow_prism()                # inside the wedge the box opens into the hollow
 
 
-def lug_cuts():
+def wall_screw_bosses():
+    return [ax * Pos(0, 0, -2) * Cylinder(BOSS_R, 60, align=(Align.CENTER, Align.CENTER, Align.MIN)) for ax in wall_screw_axes()]
+
+
+def wall_screw_cuts():
     cuts = []
-    h = (BOX_CSK - BOX_HOLE) / 2
-    for i, (u, y) in enumerate(lugs()):
-        ax = WALL_PL * Pos(u, y, 0)
-        cuts.append(ax * Pos(0, 0, -1) * Cylinder(BOX_HOLE / 2, BOSS_T + 2, align=(Align.CENTER, Align.CENTER, Align.MIN)))
-        cuts.append(ax * Pos(0, 0, BOSS_T - h) * Cone(BOX_HOLE / 2, BOX_CSK / 2, h + 0.01, align=(Align.CENTER, Align.CENTER, Align.MIN)))
-        if i == 0:   # hidden: driver access from the head up through the seat
-            cuts.append(ax * Pos(0, 0, BOSS_T) * Cylinder(ACCESS_D / 2, 60, align=(Align.CENTER, Align.CENTER, Align.MIN)))
-        else:        # visible: nothing above the flush head
-            cuts.append(ax * Pos(0, 0, BOSS_T) * Cylinder(BOX_CSK / 2, 60, align=(Align.CENTER, Align.CENTER, Align.MIN)))
+    for ax in wall_screw_axes():
+        cuts.append(ax * Pos(0, 0, CB_FLOOR) * Cylinder(CB_D / 2, 80, align=(Align.CENTER, Align.CENTER, Align.MIN)))
+        cuts.append(ax * Pos(0, 0, -5) * Cylinder(3.4 / 2, 30, align=(Align.CENTER, Align.CENTER, Align.MIN)))
     return cuts
 
 
@@ -120,8 +115,8 @@ def body_cuts():
 
 
 def seat_windows():
-    """S-diamond windows over the whole seat skin, clear of the nut blocks, cable window and the
-    hidden lug's access hole."""
+    """S-diamond windows in the seat skin under the doorbell, clear of the nut blocks, cable window
+    and wall-screw bosses."""
     from shapely.geometry import box as sbox, Point as SPoint
     from shapely.ops import unary_union
     P = v3.PERIM
@@ -133,10 +128,8 @@ def seat_windows():
         keep.append(sbox(-NUT_BLOCK[0] / 2, yp - NUT_BLOCK[1] / 2, NUT_BLOCK[0] / 2, yp + NUT_BLOCK[1] / 2))
     cy0, cy1, _ = v1.CABLE_WIN
     keep.append(sbox(CABLE_X[0], cy0, CABLE_X[1], cy1))
-    (uh, yh), _ = lugs()
-    o = WALL_PL.from_local_coords((uh, yh, 0))
-    t = (v3.SEAT - o.Z) / N.Z
-    keep.append(SPoint(o.X + N.X * t, yh).buffer(ACCESS_D / 2 / v3.c_ + 1.8))
+    for sgn in (+1, -1):
+        keep.append(SPoint(0, v1.MID_Y + sgn * WALL_SCREW_DY).buffer(BOSS_R / v3.c_ + 1.0))
     region = foot.difference(unary_union(keep))
     wins = v1.window_pattern(region, a=3.6, b=6.0, rib=1.6, margin=1.0)
     return [Pos(0, 0, v3.SEAT - v3.SKIN - 1) * extrude(v1.poly_face(w), v3.SKIN + 2) for w in wins], len(wins)
@@ -147,8 +140,12 @@ def build():
     sh = (v4.shell() + v4.vault_ribs()) - v4.lip_cutter()
     assert sh.bounding_box().max.Z < v1.Z_FRONT + 20, "lip cut failed"
     lat, nlat = v4.side_lattice()
-    part = (sh + lat + wedge_body() + cover()) & keep_wall
-    for c in body_cuts() + lug_cuts():
+    body = wedge_body()
+    for b in wall_screw_bosses():
+        body += b
+    body = body & Pos(0, -v1.DEV_H / 2, v3.SEAT - 100) * Box(200, v1.DEV_H, 200)   # nothing proud of the seat
+    part = (sh + lat + body + cover()) & keep_wall
+    for c in body_cuts() + wall_screw_cuts():
         part -= c
     wins, nwin = seat_windows()
     for w in wins:
@@ -158,7 +155,7 @@ def build():
 
 
 if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "..", "v5")
+    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "..", "v5a")
     os.makedirs(out, exist_ok=True)
     part, dropped, nwin, nlat = build()
     print("valid", part.is_valid, "vol", round(part.volume, 1), "mass g", round(part.volume / 1000 * 1.17, 1),
@@ -166,13 +163,14 @@ if __name__ == "__main__":
     bb = part.bounding_box()
     print("bbox", [round(v, 1) for v in (bb.min.X, bb.min.Y, bb.min.Z, bb.max.X, bb.max.Y, bb.max.Z)])
     export_brep(part, os.path.join(out, "hood.brep"))
-    export_step(part, os.path.join(out, "sunshade_v5.step"))
-    for f in ("device.brep", "plate.brep", "params.json", "v3_geom.json"):
-        src = os.path.join(HERE, "..", "v4", f)
-        if os.path.exists(src):
-            shutil.copy(src, os.path.join(out, f))
-    (uh, yh), (uv, yv) = lugs()
-    pts = {nm: [list(WALL_PL.from_local_coords((u, y, 0)))] for nm, (u, y) in (("hidden", (uh, yh)), ("visible", (uv, yv)))}
-    json.dump(dict(C_U=C_U, box=BOX, lug_wall_points=pts, wall_normal=list(N), u_axis=list(U),
-                   wall_origin=[W0.X, 0, W0.Z], cover_t=COVER_T, boss_t=BOSS_T),
-              open(os.path.join(out, "v5_geom.json"), "w"), indent=1)
+    export_step(part, os.path.join(out, "sunshade_hood_v5a.step"))
+    export_brep(v1.device_solid(), os.path.join(out, "device.brep"))
+    export_brep(v1.plate_solid(), os.path.join(out, "plate.brep"))
+    shutil.copy(os.path.join(HERE, "..", "v3", "v3_geom.json"), os.path.join(out, "v3_geom.json"))
+    shutil.copy(os.path.join(HERE, "..", "v4", "params.json"), os.path.join(out, "params.json"))
+    O = WALL_PL.from_local_coords((C_U, v1.MID_Y, 0))
+    json.dump(dict(variant="v5a", box_centre=list(O), u_axis=list(U), wall_normal=list(N), box=BOX,
+                   box_lugs_used=False,
+                   wall_screws=[list(ax.origin) for ax in wall_screw_axes()], wall_screw_floor=CB_FLOOR,
+                   wall_holes_from_box_centre_mm=[[round((ax.origin - O).dot(U), 1), round(ax.origin.Y - O.Y, 1)] for ax in wall_screw_axes()]),
+              open(os.path.join(out, "geom.json"), "w"), indent=1)

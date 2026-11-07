@@ -3,8 +3,8 @@
 ## The user's devices and site (read first)
 - Doorbell: **Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite)**, 137 × 40 × 26.4 mm, metal plate 31 × 125 × 1.6, wall screws M3 on the centreline 74 mm c/c, Ø18 cable hole 88 mm below the top. Geometry lives in `cad/sunshade.py` and `v3/v3_geom.json`.
 - Site: Doha, wall facing 150°, doorbell on a 20° wedge (v3/v4 replace it), camera looking ~170°.
-- The doorbell is mounted over a Qatar / UK BS 4662 switch box (75 mm opening, lugs 60.3 mm c/c). Current design: `v5/` (one piece: shade + wedge + box cover, 57 g). `adapter/` is the earlier two-piece bridge.
-- The user wants one-piece parts and light weight; a bigger shade does not shade better (v2 sweep), so size is a looks-only choice.
+- The doorbell is mounted over a Qatar / UK BS 4662 switch box (75 mm opening, lugs 60.3 mm c/c). Current designs: `v5a/` (centred v4 shape, 58 g, 2 kit wall screws) and `v5b/` (86 mm box-sized hood, 70 g, box screws). `adapter/` is the earlier two-piece bridge.
+- The user wants one-piece parts, light weight, and the doorbell CENTRED on the box: never move it off-centre to solve a fixing problem; ask instead. A bigger shade does not shade better (v2 sweep; v5b shades less), so size is a looks-only choice.
 - Any doorbell or mount request: start from this repo (check every branch) instead of asking the user for the model or dimensions, and design for the MSLA resin printer below, not FDM.
 
 ## Toolchain
