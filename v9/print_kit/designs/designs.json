@@ -79,7 +79,7 @@
  },
  "mashrabiya": {
   "file": "shade_mashrabiya_TR300.stl",
-  "mass_g": 34.8,
+  "mass_g": 34.9,
   "watertight": true,
   "min_z": 0.0,
   "bbox_mm": [

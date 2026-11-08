@@ -53,8 +53,8 @@ lw = lambda u, y, n=0.0: [float(u), float(y), float(n)]
 data["_dims"] = dict(HW=a9.HW, LAT_H=0.06, ENGRAVE=a9.ENGRAVE, roofR=a9.R_ARCH_O, roofYc=a9.geom(0.0)['yc'], M=T.flatten().tolist(), BP=a9.BP, LUG_TOP=a9.LUG_TOP, FRONT=v1.Z_FRONT, LENS_Y=-v1.LENS_DROP,
                      lugs=[lw(u, y) for u, y in a9.lug_pos()], pockets=[lw(u, y) for u, y in a9.pocket_pos()],
                      travel=a9.TRAVEL, region=[0, float(a9.Y_BOT), 44, 92])
-roof = a9.roof_step_polys()
-data["_roof"] = [[[round(x, 2), round(y, 2)] for x, y in g.exterior.coords] for g in roof]
+roof = a9.roof_line_polys()
+data["_roof"] = [[round(g.bounds[1], 2), round(g.bounds[3], 2), round(g.bounds[0], 2), round(g.bounds[2], 2)] for g in roof]   # n_lo, n_hi, u_lo, u_hi
 data["_roof_g"] = round(sum(g.area for g in roof) * a9.ROOF_E * 1.17 / 1000, 2)
 data["_labels"] = sp.LABELS
 data["_mass"] = mass

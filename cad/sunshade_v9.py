@@ -3,8 +3,8 @@
 The doorbell sits flat on the wall (no wedge, no bracket): its own metal plate bolts onto two NUT
 HOLDERS. The back flap is thin (1.6 mm); only the nut holders and the box-screw bosses are thicker.
 The side-wall pattern is engraved (it removes material), not raised, and runs over the WHOLE face of
-both side walls. A subtle stepped design (rows of stepped pyramids, like crenellations) is engraved
-0.5 mm into the roof.
+both side walls. The roof carries straight lines across it, like the courses of a shingled roof,
+engraved 0.5 mm deep.
 
 Two separate joints
 - PART TO WALL: the switch box's own 2 screws (M3.5, lugs 60.3 apart, left and right of the box),
@@ -25,7 +25,7 @@ Frame: the DOORBELL frame (sunshade.py) for device / plate; the part is built in
 BOXPL (u along the wall, y up, n out of the wall, origin at the box centre). The doorbell plate's back
 sits on the holders' top faces, 6.8 mm from the wall (as in v7).
 
-usage: python cad/sunshade_v9.py [--out DIR] [--pattern khatam] [--roof steps|none] [--base]
+usage: python cad/sunshade_v9.py [--out DIR] [--pattern khatam] [--roof lines|none] [--base]
 """
 import argparse, json, math, os, shutil, sys
 import numpy as np
@@ -223,29 +223,30 @@ def _face(poly, mirror=False):
 
 
 ROOF_E = 0.5                # roof engraving depth (the roof is 1.6 mm)
-STEP_W = (6.0, 4.5, 3.0, 1.5)     # widths of the four steps of one stepped pyramid
-STEP_H = 2.4                # height of one step
-ROOF_ROWS = ((11.0, (-12.0, -4.0, 4.0, 12.0)), (24.0, (-8.0, 0.0, 8.0)))   # (n of the base, u of each pyramid)
+LINE_W = 0.9                # width of one shingle line
+LINE_PITCH = 4.8            # distance between lines along the roof (the course height)
+LINE_N = (10.0, 34.0)       # first and last line, as distance from the wall (the roof edge is 38 mm or more)
+LINE_U = 18.5               # lines run across the whole barrel part of the roof, |u| <= this
 
 
-def roof_step_polys():
-    """Stepped pyramids (the crenellation / shurafat motif) in the roof's (u, n) plane, points toward the front."""
+def roof_line_polys():
+    """Straight lines across the roof, like the courses of a shingled roof: thin rectangles in the
+    roof's (u, n) plane, parallel to each other and to the wall."""
     from shapely.geometry import box as sbox
-    from shapely.ops import unary_union
-    out = []
-    for n0, us in ROOF_ROWS:
-        for u in us:
-            out.append(unary_union([sbox(u - w / 2, n0 + i * STEP_H, u + w / 2, n0 + (i + 1) * STEP_H) for i, w in enumerate(STEP_W)]))
+    out, n = [], LINE_N[0]
+    while n <= LINE_N[1] + 1e-6:
+        out.append(sbox(-LINE_U, n - LINE_W / 2, LINE_U, n + LINE_W / 2))
+        n += LINE_PITCH
     return out
 
 
 def roof_tool():
-    """One tool that engraves the stepped design ROOF_E deep into the barrel roof: vertical prisms of
-    the design, intersected with a thin ring round the roof's axis (constant depth on the curve)."""
+    """One tool that engraves the shingle lines ROOF_E deep into the barrel roof: vertical prisms of
+    the lines, intersected with a thin ring round the roof's axis (constant depth on the curve)."""
     g = geom(0.0)
     top = Y_DEVTOP + CROWN_IN + WALL + 8
     pl = Plane(origin=BOXPL.from_local_coords((0, top, 0)), x_dir=U, z_dir=Vector(0, -1, 0))   # shape x = u, y = n; extrudes downward
-    prisms = [extrude(pl * _face(q), 40.0) for q in roof_step_polys()]
+    prisms = [extrude(pl * _face(q), 40.0) for q in roof_line_polys()]
     ring = BOXPL * Pos(0, g["yc"], -1) * extrude(Circle(R_ARCH_O + 1.0) - Circle(R_ARCH_O - ROOF_E), 100)
     return ring & Compound(children=prisms)
 
@@ -350,7 +351,7 @@ def build(pattern="khatam", lattice=True, roof=True):
 def write_geom(out, pattern):
     O = vec(BOXPL.origin)
     pl = lambda u, y, n=0.0: list(BOXPL.from_local_coords((u, y, n)))
-    json.dump(dict(variant="v9", pattern=pattern, roof_steps=True, roof_R=R_ARCH_O, roof_yc=geom(0.0)["yc"],
+    json.dump(dict(variant="v9", pattern=pattern, roof_lines=True, roof_R=R_ARCH_O, roof_yc=geom(0.0)["yc"],
                    box_centre=list(O), u_axis=list(vec(U)), wall_normal=list(vec(N)), box=BOX, box_lugs_used=True,
                    hood_width=2 * HW, plate_t=FLAP, plate_back_n=BP, lug_top=LUG_TOP, skin=SKIN, holder=HOLDER, C_U=C_U, bracket_u_local=U0, hole_dy=HOLE_DY, variant_note="simple: flat, thin flap, nut holders",
                    lug_points=[pl(u, y) for u, y in lug_pos()],
@@ -363,11 +364,11 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=os.path.join(HERE, "..", "v9"))
     ap.add_argument("--pattern", default="khatam", choices=list(sp.PATTERNS))
-    ap.add_argument("--roof", default="steps", choices=["steps", "none"])
+    ap.add_argument("--roof", default="lines", choices=["lines", "none"])
     ap.add_argument("--base", action="store_true", help="no engraving: writes base.brep for the viewer")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
-    part, dropped, (rmin, rmax) = build(a.pattern, lattice=not a.base, roof=(a.roof == "steps" and not a.base))
+    part, dropped, (rmin, rmax) = build(a.pattern, lattice=not a.base, roof=(a.roof == "lines" and not a.base))
     print("C_U", C_U, "lip reach", round(rmin, 1), "..", round(rmax, 1), "valid", part.is_valid, "dropped", dropped)
     bb = part.bounding_box()
     print("bbox", [round(v, 1) for v in (bb.min.X, bb.min.Y, bb.min.Z, bb.max.X, bb.max.Y, bb.max.Z)])
