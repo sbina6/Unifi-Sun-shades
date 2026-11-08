@@ -272,15 +272,15 @@ The simple version (v7) with three changes:
 
 **Rebuild:** `python cad/sunshade_v8.py --pattern khatam && python cad/verify_v8.py && python cad/coupon_v3.py v8 && CAD_VER=v8 python cad/export_kit.py && python cad/export_v8_designs.py`. For the viewer: `python cad/sunshade_v8.py --base`, then `python cad/v8_viewer.py && node cad/v8_shots.js`.
 
-## v9: patterns over the whole face, shingle-line roof
+## v9: patterns over the whole face, shingle roof
 
 v8 with two changes:
 - **Patterns over the whole face.** The engraved pattern now runs over the whole face of both side walls, edge to edge inside a 2.6 mm frame. Motifs at the edge are cut off by the frame, as in traditional screens, and slivers under about 0.9 mm wide are dropped. The pointed-arch design gets a small round window above each arch.
-- **Shingle-line roof.** Six straight lines run across the barrel roof, from one side of the arch to the other, like the courses of a shingled roof: 4.8 mm apart, 0.9 mm wide and 0.5 mm deep. They are lines, not blocks. They remove 0.12 g, leave 1.1 mm of roof, and stop at least 3 mm back from the roof's edge. (An earlier v9 draft had stepped pyramids on the roof; replaced at your request.)
+- **Shingle roof.** Six overlapping shingle courses are built up across the barrel roof, as you asked: material added, not just lines. Each course is a thin wedge 5 mm long that rises to 0.8 mm at its front edge and steps back down, so the next one overlaps it. They cover the whole arch, start 5 mm from the wall and end 3 mm short of the roof's edge, and add about 0.7 g. This is the one place the part gets extra material; the side patterns stay engraved. (Earlier v9 drafts had stepped blocks, then engraved lines.)
 
 ![v9](v9/v9_views.png)
 
-The roof with and without the lines:
+The roof with and without the shingles (left to right: top with, top without, side):
 
 ![roof](v9/v9_roof.png)
 
@@ -288,14 +288,14 @@ The roof with and without the lines:
 
 | Design | v8 (band) | v9 (whole face + roof) |
 |---|---|---|
-| 8-point star | 36.0 g | 34.3 g |
-| 6-point star | 35.5 g | 33.3 g |
-| 12-point star | 35.6 g | 34.8 g |
-| Rosette | 35.8 g | 35.5 g |
-| Octagon and star | 36.3 g | 33.6 g |
-| Pointed arches | 35.5 g | 34.9 g |
-| Mashrabiya | 35.4 g | 34.9 g |
-| Smooth | 38.2 g | 38.1 g |
+| 8-point star | 36.0 g | 35.0 g |
+| 6-point star | 35.5 g | 34.0 g |
+| 12-point star | 35.6 g | 35.5 g |
+| Rosette | 35.8 g | 36.1 g |
+| Octagon and star | 36.3 g | 34.2 g |
+| Pointed arches | 35.5 g | 35.5 g |
+| Mashrabiya | 35.4 g | 35.5 g |
+| Smooth | 38.2 g | 38.7 g |
 
 **Checks** (`v9/verify_report.json`): all pass, as for v8: no overlap, hook-on clear at 10°, 15° and 20°, 0% of the camera picture covered, 36 clear screw, nut, driver, lock-screw and cable paths, the box hidden, STLs watertight. The shade shape and lip are unchanged, so the v8/v7 sun numbers apply.
 

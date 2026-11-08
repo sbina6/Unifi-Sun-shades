@@ -136,7 +136,7 @@ dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; }
     <section>
       <span class="label">This design</span>
       <dl id="facts"></dl>
-      <p class="note">The pattern is engraved 0.8 mm into the 1.6 mm side walls and runs over the whole face, so it makes the part lighter, not heavier. The roof carries straight lines across it, like the courses of a shingled roof, engraved 0.5 mm. In this viewer the engraved areas are drawn darker so they can be seen.</p>
+      <p class="note">The pattern is engraved 0.8 mm into the 1.6 mm side walls and runs over the whole face, so it makes the part lighter, not heavier. The roof carries six overlapping shingle courses, raised 0.8 mm at their front edges. It is the one place that adds material. In this viewer the engraved areas are drawn darker so they can be seen.</p>
       <p class="note">The doorbell's front details (glass, lens, button) are drawn approximately. The body colour is the real white.</p>
     </section>
   </aside>
@@ -241,20 +241,23 @@ const wallMat = new THREE.MeshStandardMaterial({ color: 0xcfcfc8, roughness: .95
 
 let pattern = "khatam", mode = "all", explode = 0, xray = false, roofOn = true;
 const roofG = new THREE.Group(); scene.add(roofG);
-function buildRoof() {                               // shingle lines engraved across the barrel roof: thin strips bent onto the arch
+function buildRoof() {                               // raised shingle courses on the barrel roof: each a wedge that rises toward its front edge, then steps down
   while (roofG.children.length) { const c = roofG.children.pop(); c.geometry.dispose(); }
   if (!roofOn) return;
-  const R = D.roofR, yc = D.roofYc;
-  for (const [n0, n1, u0, u1] of window.MESHES._roof) {
-    const pos = [], idx = [], K = 40;
-    for (let k = 0; k <= K; k++) {
-      const u = u0 + (u1 - u0) * k / K, y = yc + Math.sqrt(R * R - u * u) + .12;
-      pos.push(u, y, n0, u, y, n1);
-      if (k < K) { const i = 2 * k; idx.push(i, i + 1, i + 2, i + 1, i + 3, i + 2); }
+  const { R, yc, n0, pitch, count, h, ang } = window.MESHES._roof, K = 36, A = ang * Math.PI / 180;
+  for (let c = 0; c < count; c++) {
+    const a = n0 + c * pitch, b = a + pitch, pos = [], idx = [];
+    const vtx = (r, phi, n) => { pos.push(r * Math.sin(phi), yc + r * Math.cos(phi), n); return pos.length / 3 - 1; };
+    const ramp = [], step = [];
+    for (let k = 0; k <= K; k++) { const phi = -A + 2 * A * k / K; ramp.push([vtx(R, phi, a), vtx(R + h, phi, b)]); step.push([vtx(R + h, phi, b), vtx(R, phi, b)]); }
+    for (let k = 0; k < K; k++) {
+      idx.push(ramp[k][0], ramp[k][1], ramp[k + 1][1], ramp[k][0], ramp[k + 1][1], ramp[k + 1][0]);
+      idx.push(step[k][0], step[k][1], step[k + 1][1], step[k][0], step[k + 1][1], step[k + 1][0]);
     }
+    for (const k of [0, K]) idx.push(ramp[k][0], ramp[k][1], step[k][1]);
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
-    roofG.add(new THREE.Mesh(g, reliefMat));
+    roofG.add(new THREE.Mesh(g, shadeMat));
   }
 }
 function buildRelief() {
@@ -278,7 +281,7 @@ function apply() {
   plate.material.transparent = xray; plate.material.opacity = xray ? .5 : 1;
   mk.visible = xray; document.getElementById("legend").classList.toggle("on", xray);
   document.getElementById("explode-v").textContent = explode + " mm";
-  document.getElementById("facts").innerHTML = [["Pattern", LAB[pattern]], ["Shade", "48 mm wide, 42 mm deep at most, no angle"], ["Back flap", "1.6 mm thin, 82 × 82 mm"], ["Pattern", "engraved 0.8 mm, over the whole face"], ["Roof", roofOn ? "shingle lines, 0.5 mm" : "plain"], ["Printed mass", "≈ " + (MASS[pattern] - (roofOn ? 0 : -window.MESHES._roof_g) - (roofOn ? window.MESHES._roof_g : 0)).toFixed(0) + " g, TR300 resin"],
+  document.getElementById("facts").innerHTML = [["Pattern", LAB[pattern]], ["Shade", "48 mm wide, 42 mm deep at most, no angle"], ["Back flap", "1.6 mm thin, 82 × 82 mm"], ["Pattern", "engraved 0.8 mm, over the whole face"], ["Roof", roofOn ? "6 shingle courses, 0.8 mm" : "plain"], ["Printed mass", "≈ " + (MASS[pattern] + (roofOn ? window.MESHES._roof_add : 0)).toFixed(0) + " g, TR300 resin"],
     ["Fixing to wall", "the box's own 2 screws, no drilling"], ["Doorbell plate", "2 × M3 × 8 into 2 nut holders, 74 mm apart"]].map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("");
 }
 function press(ids, id) { for (const i of ids) document.getElementById(i).setAttribute("aria-pressed", String(i === id)); }

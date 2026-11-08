@@ -3,8 +3,8 @@
 The doorbell sits flat on the wall (no wedge, no bracket): its own metal plate bolts onto two NUT
 HOLDERS. The back flap is thin (1.6 mm); only the nut holders and the box-screw bosses are thicker.
 The side-wall pattern is engraved (it removes material), not raised, and runs over the WHOLE face of
-both side walls. The roof carries straight lines across it, like the courses of a shingled roof,
-engraved 0.5 mm deep.
+both side walls. The roof carries raised, overlapping shingle courses (material ADDED there, at the user's request),
+6 courses, 0.8 mm at the exposed edge.
 
 Two separate joints
 - PART TO WALL: the switch box's own 2 screws (M3.5, lugs 60.3 apart, left and right of the box),
@@ -25,7 +25,7 @@ Frame: the DOORBELL frame (sunshade.py) for device / plate; the part is built in
 BOXPL (u along the wall, y up, n out of the wall, origin at the box centre). The doorbell plate's back
 sits on the holders' top faces, 6.8 mm from the wall (as in v7).
 
-usage: python cad/sunshade_v9.py [--out DIR] [--pattern khatam] [--roof lines|none] [--base]
+usage: python cad/sunshade_v9.py [--out DIR] [--pattern khatam] [--roof shingles|none] [--base]
 """
 import argparse, json, math, os, shutil, sys
 import numpy as np
@@ -222,33 +222,31 @@ def _face(poly, mirror=False):
     return f
 
 
-ROOF_E = 0.5                # roof engraving depth (the roof is 1.6 mm)
-LINE_W = 0.9                # width of one shingle line
-LINE_PITCH = 4.8            # distance between lines along the roof (the course height)
-LINE_N = (10.0, 34.0)       # first and last line, as distance from the wall (the roof edge is 38 mm or more)
-LINE_U = 18.5               # lines run across the whole barrel part of the roof, |u| <= this
+SH_N0 = 5.0                 # first shingle course starts this far from the wall
+SH_PITCH = 5.0              # course length along the roof
+SH_COUNT = 6                # courses: the last one ends at n = 35, the roof's edge is at 38 or more
+SH_H = 0.8                  # thickness at the exposed (front) edge of a course
+SH_ANG = 36.0               # courses cover the arch, +-36 degrees from the top
 
 
-def roof_line_polys():
-    """Straight lines across the roof, like the courses of a shingled roof: thin rectangles in the
-    roof's (u, n) plane, parallel to each other and to the wall."""
-    from shapely.geometry import box as sbox
-    out, n = [], LINE_N[0]
-    while n <= LINE_N[1] + 1e-6:
-        out.append(sbox(-LINE_U, n - LINE_W / 2, LINE_U, n + LINE_W / 2))
-        n += LINE_PITCH
-    return out
-
-
-def roof_tool():
-    """One tool that engraves the shingle lines ROOF_E deep into the barrel roof: vertical prisms of
-    the lines, intersected with a thin ring round the roof's axis (constant depth on the curve)."""
+def roof_shingles():
+    """Overlapping shingle courses ADDED on the barrel roof (the user asked for material here, not
+    grooves): each course is a thin wedge that rises from the roof to SH_H toward the front edge and
+    then steps back down to the roof, so the next course overlaps like a real shingle."""
     g = geom(0.0)
-    top = Y_DEVTOP + CROWN_IN + WALL + 8
-    pl = Plane(origin=BOXPL.from_local_coords((0, top, 0)), x_dir=U, z_dir=Vector(0, -1, 0))   # shape x = u, y = n; extrudes downward
-    prisms = [extrude(pl * _face(q), 40.0) for q in roof_line_polys()]
-    ring = BOXPL * Pos(0, g["yc"], -1) * extrude(Circle(R_ARCH_O + 1.0) - Circle(R_ARCH_O - ROOF_E), 100)
-    return ring & Compound(children=prisms)
+    R0 = R_ARCH_O
+    axis = Axis(origin=BOXPL.from_local_coords((0, g["yc"], 0)), direction=N)
+    th0 = math.radians(90.0 - SH_ANG)
+    dvec = math.cos(th0) * U + math.sin(th0) * Vector(0, 1, 0)           # from the axis toward the start of the sector
+    pl = Plane(origin=BOXPL.from_local_coords((0, g["yc"], 0)), x_dir=dvec, z_dir=dvec.cross(N))   # shape x = radius, y = n
+    out = None
+    for i in range(SH_COUNT):
+        n0 = SH_N0 + i * SH_PITCH
+        n1 = n0 + SH_PITCH
+        prof = make_face(Polyline((R0 - 0.3, n0), (R0, n0), (R0 + SH_H, n1), (R0 - 0.3, n1), close=True))
+        w = revolve(pl * prof, axis, 2 * SH_ANG)
+        out = w if out is None else out + w
+    return out
 
 
 def engraving_tools(pattern, P, R):
@@ -335,9 +333,9 @@ def build(pattern="khatam", lattice=True, roof=True):
     if lattice:
         sh = engrave(sh, pattern, P, R)
     if roof:
-        r2 = sh - roof_tool()
+        r2 = sh + roof_shingles()
         if not mesh_ok(r2):
-            raise RuntimeError("roof engraving failed")
+            raise RuntimeError("roof shingles failed")
         sh = r2
     part = (sh + backplate()) & front_of_wall()
     for c in mount_cuts():
@@ -351,7 +349,7 @@ def build(pattern="khatam", lattice=True, roof=True):
 def write_geom(out, pattern):
     O = vec(BOXPL.origin)
     pl = lambda u, y, n=0.0: list(BOXPL.from_local_coords((u, y, n)))
-    json.dump(dict(variant="v9", pattern=pattern, roof_lines=True, roof_R=R_ARCH_O, roof_yc=geom(0.0)["yc"],
+    json.dump(dict(variant="v9", pattern=pattern, roof_shingles=True, roof_R=R_ARCH_O, roof_yc=geom(0.0)["yc"],
                    box_centre=list(O), u_axis=list(vec(U)), wall_normal=list(vec(N)), box=BOX, box_lugs_used=True,
                    hood_width=2 * HW, plate_t=FLAP, plate_back_n=BP, lug_top=LUG_TOP, skin=SKIN, holder=HOLDER, C_U=C_U, bracket_u_local=U0, hole_dy=HOLE_DY, variant_note="simple: flat, thin flap, nut holders",
                    lug_points=[pl(u, y) for u, y in lug_pos()],
@@ -364,11 +362,11 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=os.path.join(HERE, "..", "v9"))
     ap.add_argument("--pattern", default="khatam", choices=list(sp.PATTERNS))
-    ap.add_argument("--roof", default="lines", choices=["lines", "none"])
+    ap.add_argument("--roof", default="shingles", choices=["shingles", "none"])
     ap.add_argument("--base", action="store_true", help="no engraving: writes base.brep for the viewer")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
-    part, dropped, (rmin, rmax) = build(a.pattern, lattice=not a.base, roof=(a.roof == "lines" and not a.base))
+    part, dropped, (rmin, rmax) = build(a.pattern, lattice=not a.base, roof=(a.roof == "shingles" and not a.base))
     print("C_U", C_U, "lip reach", round(rmin, 1), "..", round(rmax, 1), "valid", part.is_valid, "dropped", dropped)
     bb = part.bounding_box()
     print("bbox", [round(v, 1) for v in (bb.min.X, bb.min.Y, bb.min.Z, bb.max.X, bb.max.Y, bb.max.Z)])

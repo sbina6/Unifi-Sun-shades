@@ -1,7 +1,7 @@
 {
  "khatam": {
   "file": "shade_khatam_TR300.stl",
-  "mass_g": 34.3,
+  "mass_g": 35.0,
   "watertight": true,
   "min_z": 0.0,
   "bbox_mm": [
@@ -14,7 +14,7 @@
  },
  "hexstar": {
   "file": "shade_hexstar_TR300.stl",
-  "mass_g": 33.3,
+  "mass_g": 34.0,
   "watertight": true,
   "min_z": 0.0,
   "bbox_mm": [
@@ -27,7 +27,7 @@
  },
  "dodecastar": {
   "file": "shade_dodecastar_TR300.stl",
-  "mass_g": 34.8,
+  "mass_g": 35.5,
   "watertight": true,
   "min_z": 0.0,
   "bbox_mm": [
@@ -40,7 +40,7 @@
  },
  "rosette": {
   "file": "shade_rosette_TR300.stl",
-  "mass_g": 35.5,
+  "mass_g": 36.1,
   "watertight": true,
   "min_z": 0.0,
   "bbox_mm": [
@@ -53,7 +53,7 @@
  },
  "octstar": {
   "file": "shade_octstar_TR300.stl",
-  "mass_g": 33.6,
+  "mass_g": 34.2,
   "watertight": true,
   "min_z": 0.0,
   "bbox_mm": [
@@ -66,7 +66,7 @@
  },
  "arcade": {
   "file": "shade_arcade_TR300.stl",
-  "mass_g": 34.9,
+  "mass_g": 35.5,
   "watertight": true,
   "min_z": 0.0,
   "bbox_mm": [
@@ -79,7 +79,7 @@
  },
  "mashrabiya": {
   "file": "shade_mashrabiya_TR300.stl",
-  "mass_g": 34.9,
+  "mass_g": 35.5,
   "watertight": true,
   "min_z": 0.0,
   "bbox_mm": [
@@ -92,7 +92,7 @@
  },
  "smooth": {
   "file": "shade_smooth_TR300.stl",
-  "mass_g": 38.1,
+  "mass_g": 38.7,
   "watertight": true,
   "min_z": 0.0,
   "bbox_mm": [

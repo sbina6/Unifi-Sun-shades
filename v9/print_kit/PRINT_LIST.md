@@ -1,6 +1,6 @@
-# Doorbell Lite sunshade v9: print list (simple, thin flap, nut holders, full-face patterns, shingle-line roof)
+# Doorbell Lite sunshade v9: print list (simple, thin flap, nut holders, full-face patterns, shingle roof)
 
-**A small shade, centred on your Qatar / UK square switch box (BS 4662). The doorbell sits flat on the wall with no angle, and its own metal plate bolts onto two nut holders.** The back flap is now thin, so the part uses far less material. The side walls carry Islamic geometric patterns, **engraved** into them and running over the **whole face** of both walls, so a pattern makes the part lighter, not heavier. The roof carries straight **shingle lines** across it, engraved 0.5 mm. For a white Ubiquiti UniFi Protect Doorbell Lite on a wall facing 150° in Doha.
+**A small shade, centred on your Qatar / UK square switch box (BS 4662). The doorbell sits flat on the wall with no angle, and its own metal plate bolts onto two nut holders.** The back flap is now thin, so the part uses far less material. The side walls carry Islamic geometric patterns, **engraved** into them and running over the **whole face** of both walls, so a pattern makes the part lighter, not heavier. The roof carries six overlapping **shingle courses**: raised wedges across the roof, 0.8 mm at their front edges. It is the one place the part gets extra material. For a white Ubiquiti UniFi Protect Doorbell Lite on a wall facing 150° in Doha.
 
 ![views](v9_views.png)
 
@@ -9,8 +9,8 @@
 | | v8 | v9 |
 |---|---|---|
 | Pattern coverage | a band down the middle of each side wall | **the whole face** of both side walls: motifs run to the frame and are clipped there |
-| Roof | plain | **shingle lines**: six straight lines across it, like the courses of a shingled roof, engraved 0.5 mm |
-| Mass, 8-point star | 36.0 g | **34.3 g** |
+| Roof | plain | **shingles**: six raised courses across it that overlap like a shingled roof |
+| Mass, 8-point star | 36.0 g | **35.0 g** |
 | Pointed arches | a single row | a row of arches with a small round window above each |
 
 The shade shape, the thin 1.6 mm flap, the nut holders and the mounting are unchanged. (Against v7, with a thick plate and raised patterns, the 8-point star was 56.7 g.)
@@ -28,7 +28,7 @@ The two joints are independent. The doorbell and its plate come off without touc
 
 ## What's in the part
 
-- **Shade:** 48 mm wide, 1.6 mm walls, straight sides, barrel-vault roof, reaching up to 42 mm from the wall (about 14 mm past the doorbell's front). The roof's shingle lines are six straight lines across the roof, 4.8 mm apart, 0.9 mm wide and 0.5 mm deep, running from one side of the arch to the other. They leave 1.1 mm of roof and stop at least 3 mm back from the roof's edge.
+- **Shade:** 48 mm wide, 1.6 mm walls, straight sides, barrel-vault roof, reaching up to 42 mm from the wall (about 14 mm past the doorbell's front). The roof's shingles are six courses across the roof. Each is a thin wedge 5 mm long that rises to 0.8 mm at its front edge and then steps back down, so the next course overlaps it. They cover the whole arch (36° either side of the top), start 5 mm from the wall, and the last one ends at 35 mm, 3 mm back from the roof's edge. They add about 0.7 g.
 - **Back flap:** 82 × 82 mm, 1.6 mm thick (the box is 75 mm), with two small tabs under the nut holders. It is solid resin. Estimate (not a finite-element run): the doorbell weighs about 0.15 kg and its centre sits about 15 mm out from the wall, so the flap sees a bending moment of roughly 25 N·mm across its 82 mm width at the box screws. That is about 1 MPa, against 60 MPa for TR300 and the repo's 10 MPa working limit. The nut bearing area takes about 7 MPa at a hand-tight 100 N, so tighten the bolts by hand only.
 - **Nut holders:** 2, as above.
 - **Bosses:** 2 small raised rings round the box screws so the countersinks are deep enough.
@@ -38,7 +38,7 @@ The two joints are independent. The doorbell and its plate come off without touc
 
 | File | Qty | Resin | Purpose |
 |---|---|---|---|
-| `sunshade_hood_v9_TR300.stl` | 1 | Phrozen TR300 | The default design: 8-point star. 34.3 g |
+| `sunshade_hood_v9_TR300.stl` | 1 | Phrozen TR300 | The default design: 8-point star. 35.0 g |
 | `designs/shade_<pattern>_TR300.stl` | pick 1 | Phrozen TR300 | The same part with another pattern (table below) |
 | `fit_test_coupon_v9_TR300.stl` | 1 | Phrozen TR300 | Scale frame (62.00 X / 62.00 Y, 56.60 Z), M3 nut channels 5.6 / 5.7 / 5.8, M3 holes 3.3 / 3.4 / 3.5. 6.2 g |
 
@@ -50,14 +50,14 @@ STEP files for the default design and the coupon are included.
 
 | Pattern | File | Mass | Look |
 |---|---|---|---|
-| **8-point star** (default) | `shade_khatam_TR300.stl` | 34.3 g | Eight-pointed stars touching tip to tip, with four-lobed crosses between them |
-| 6-point star | `shade_hexstar_TR300.stl` | 33.3 g | Hexagrams and hexagons, a classic six-fold lattice |
-| **12-point star** (new) | `shade_dodecastar_TR300.stl` | 34.8 g | Twelve-pointed stars touching tip to tip, with small curved triangles between them |
-| Rosette | `shade_rosette_TR300.stl` | 35.5 g | Overlapping circles, leaving petals and curved triangles |
-| Octagon and star | `shade_octstar_TR300.stl` | 33.6 g | Octagons each holding an eight-point star, with small diamonds between |
-| **Pointed arches** (new) | `shade_arcade_TR300.stl` | 34.9 g | A row of pointed arches along the wall, like an arcade or a mihrab, with a small round window above each |
-| **Mashrabiya** (new) | `shade_mashrabiya_TR300.stl` | 34.9 g | Circles and diamonds on a grid, like a turned-wood screen |
-| Smooth | `shade_smooth_TR300.stl` | 38.1 g | No pattern on the walls (the roof lines stay) |
+| **8-point star** (default) | `shade_khatam_TR300.stl` | 35.0 g | Eight-pointed stars touching tip to tip, with four-lobed crosses between them |
+| 6-point star | `shade_hexstar_TR300.stl` | 34.0 g | Hexagrams and hexagons, a classic six-fold lattice |
+| **12-point star** (new) | `shade_dodecastar_TR300.stl` | 35.5 g | Twelve-pointed stars touching tip to tip, with small curved triangles between them |
+| Rosette | `shade_rosette_TR300.stl` | 36.1 g | Overlapping circles, leaving petals and curved triangles |
+| Octagon and star | `shade_octstar_TR300.stl` | 34.2 g | Octagons each holding an eight-point star, with small diamonds between |
+| **Pointed arches** (new) | `shade_arcade_TR300.stl` | 35.5 g | A row of pointed arches along the wall, like an arcade or a mihrab, with a small round window above each |
+| **Mashrabiya** (new) | `shade_mashrabiya_TR300.stl` | 35.5 g | Circles and diamonds on a grid, like a turned-wood screen |
+| Smooth | `shade_smooth_TR300.stl` | 38.7 g | No pattern on the walls (the roof shingles stay) |
 
 All eight are watertight, one body, no sealed voids, 82 × 141 × 141 mm as printed. The motifs are recessed 0.8 mm and the bars between them keep the full wall thickness, 1.4 mm wide everywhere. The pattern fills each wall face edge to edge inside a 2.6 mm frame; motifs at the edge are cut off by the frame, as in traditional screens. Slivers under about 0.9 mm wide are dropped.
 
@@ -95,7 +95,7 @@ Wash and remove supports. Clear the nut pockets, slots and countersinks with a p
 | Flap | 1.6 mm, 82 × 82 mm plus two tabs | Hides the box |
 | Shade | 48 mm wide, 1.6 mm walls, up to 42 mm deep | 2.4 mm gap each side of the doorbell, 19 mm above it |
 | Engraving, walls | 0.8 mm deep, bars 1.4 mm wide, 2.6 mm frame | 0.8 mm of wall stays under the motifs |
-| Engraving, roof | 6 lines, 0.9 mm wide, 0.5 mm deep, 4.8 mm apart | 1.1 mm of roof stays |
+| Shingles, roof | 6 courses, 5 mm long, 0.8 mm tall at the front edge | Raised: added on top of the 1.6 mm roof |
 
 ## Sun on the doorbell (Doha, wall and camera facing 150°), Wh/day
 
@@ -107,7 +107,7 @@ Wash and remove supports. Clear the nut pockets, slots and countersinks with a p
 | Feb 5 / Nov 6 | 34.6 | **19.4** | 44% |
 | Dec 21 | 35.4 | **20.5** | 42% |
 
-The shade covers 0% of the camera picture. The pattern, the roof design and the thin flap have no effect on these numbers.
+The shade covers 0% of the camera picture. The pattern, the roof shingles and the thin flap have no effect on these numbers.
 
 ## Hardware by job
 

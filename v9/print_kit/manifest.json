@@ -1,5 +1,5 @@
 {
- "kit": "UniFi Doorbell Lite, simple version v9: small shade, no angle, 1.6 mm back flap with two nut holders, centred on a Qatar/BS 4662 switch box; the doorbell's own plate bolts on with M3 x 8; Islamic patterns engraved over the whole face of both side walls plus straight shingle lines engraved across the roof (8 designs)",
+ "kit": "UniFi Doorbell Lite, simple version v9: small shade, no angle, 1.6 mm back flap with two nut holders, centred on a Qatar/BS 4662 switch box; the doorbell's own plate bolts on with M3 x 8; Islamic patterns engraved over the whole face of both side walls plus six raised overlapping shingle courses on the roof (8 designs)",
  "version": "v9",
  "date": "2026-11-08",
  "device": "Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite), 137 x 40 x 26.4 mm",
@@ -9,12 +9,12 @@
    "qty": 1,
    "material": "Phrozen TR300",
    "orientation": "pre-oriented: long axis 45 deg from vertical, wall side toward the plate, roof up",
-   "supports": "wall-side face only (flap back, shade back edge); engraving floors and holder undersides print unsupported; none on the front face, nut pockets, countersinks or edge",
+   "supports": "wall-side face only (flap back, shade back edge); engraving floors, holder undersides and shingle steps print unsupported; none on the front face, nut pockets, countersinks or edge",
    "watertight": true,
    "bodies": 1,
    "winding_ok": true,
-   "volume_mm3": 29336.0,
-   "mass_g_TR300": 34.3,
+   "volume_mm3": 29892.9,
+   "mass_g_TR300": 35.0,
    "min_z": 0.0,
    "bbox_mm": [
     82.0,
@@ -23,10 +23,10 @@
    ],
    "sealed_internal_voids": 0,
    "down_facing_area_mm2": {
-    "steeper_than_45deg_from_horizontal_(self-supporting)": 9581.0,
+    "steeper_than_45deg_from_horizontal_(self-supporting)": 9486.0,
     "flatter_than_45deg_(needs_support)": 918.0
    },
-   "design": "khatam (8-point star), whole face, shingle-line roof"
+   "design": "khatam (8-point star), whole face, shingle roof"
   },
   {
    "file": "fit_test_coupon_v9_TR300.stl",
@@ -55,7 +55,7 @@
  "designs": {
   "khatam": {
    "file": "shade_khatam_TR300.stl",
-   "mass_g": 34.3,
+   "mass_g": 35.0,
    "watertight": true,
    "min_z": 0.0,
    "bbox_mm": [
@@ -68,7 +68,7 @@
   },
   "hexstar": {
    "file": "shade_hexstar_TR300.stl",
-   "mass_g": 33.3,
+   "mass_g": 34.0,
    "watertight": true,
    "min_z": 0.0,
    "bbox_mm": [
@@ -81,7 +81,7 @@
   },
   "dodecastar": {
    "file": "shade_dodecastar_TR300.stl",
-   "mass_g": 34.8,
+   "mass_g": 35.5,
    "watertight": true,
    "min_z": 0.0,
    "bbox_mm": [
@@ -94,7 +94,7 @@
   },
   "rosette": {
    "file": "shade_rosette_TR300.stl",
-   "mass_g": 35.5,
+   "mass_g": 36.1,
    "watertight": true,
    "min_z": 0.0,
    "bbox_mm": [
@@ -107,7 +107,7 @@
   },
   "octstar": {
    "file": "shade_octstar_TR300.stl",
-   "mass_g": 33.6,
+   "mass_g": 34.2,
    "watertight": true,
    "min_z": 0.0,
    "bbox_mm": [
@@ -120,7 +120,7 @@
   },
   "arcade": {
    "file": "shade_arcade_TR300.stl",
-   "mass_g": 34.9,
+   "mass_g": 35.5,
    "watertight": true,
    "min_z": 0.0,
    "bbox_mm": [
@@ -133,7 +133,7 @@
   },
   "mashrabiya": {
    "file": "shade_mashrabiya_TR300.stl",
-   "mass_g": 34.9,
+   "mass_g": 35.5,
    "watertight": true,
    "min_z": 0.0,
    "bbox_mm": [
@@ -146,7 +146,7 @@
   },
   "smooth": {
    "file": "shade_smooth_TR300.stl",
-   "mass_g": 38.1,
+   "mass_g": 38.7,
    "watertight": true,
    "min_z": 0.0,
    "bbox_mm": [
@@ -180,5 +180,5 @@
    "v9": 20.5
   }
  },
- "sun_note": "the shade shape is unchanged since v7/v8, so the v8 sun study applies"
+ "sun_note": "the shade shape and lip are unchanged since v7/v8 (the shingles end 3 mm short of the roof edge), so the v8 sun study applies"
 }

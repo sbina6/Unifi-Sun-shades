@@ -1,7 +1,7 @@
 {
  "variant": "v9",
  "pattern": "khatam",
- "roof_lines": true,
+ "roof_shingles": true,
  "roof_R": 30.0,
  "roof_yc": 59.099999999999994,
  "box_centre": [
