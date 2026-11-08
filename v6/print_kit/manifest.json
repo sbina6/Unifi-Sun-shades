@@ -1,0 +1,145 @@
+{
+ "kit": "UniFi Doorbell Lite: straight shade + 86 mm box backplate, centred on a Qatar/BS 4662 switch box; the doorbell sits angled inside on the user's own bracket; Islamic geometric side-wall relief (5 patterns)",
+ "version": "v6",
+ "date": "2026-11-08",
+ "device": "Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite), 137 x 40 x 26.4 mm",
+ "parts": [
+  {
+   "file": "sunshade_hood_v6_TR300.stl",
+   "qty": 1,
+   "material": "Phrozen TR300",
+   "orientation": "pre-oriented: long axis 45 deg from vertical, wall side toward the plate, roof up",
+   "supports": "wall-side face only (backplate back, hood back edge); the 0.6 mm pattern ledges print unsupported; none on the front face, nut pockets, countersinks, lip or pattern",
+   "watertight": true,
+   "bodies": 1,
+   "winding_ok": true,
+   "volume_mm3": 57363.2,
+   "mass_g_TR300": 67.1,
+   "min_z": 0.0,
+   "bbox_mm": [
+    86.0,
+    159.1,
+    154.4
+   ],
+   "sealed_internal_voids": 0,
+   "down_facing_area_mm2": {
+    "steeper_than_45deg_from_horizontal_(self-supporting)": 14502.0,
+    "flatter_than_45deg_(needs_support)": 593.0
+   },
+   "design": "khatam (8-point star)"
+  },
+  {
+   "file": "fit_test_coupon_v6_TR300.stl",
+   "qty": 1,
+   "material": "Phrozen TR300",
+   "orientation": "axis-aligned, flat (do not tilt); measure 62.00 X / 62.00 Y / 56.60 Z; nut channels 5.6/5.7/5.8; M3 holes 3.3/3.4/3.5",
+   "supports": "raft/light supports under the frame",
+   "watertight": true,
+   "bodies": 1,
+   "winding_ok": true,
+   "volume_mm3": 5339.3,
+   "mass_g_TR300": 6.2,
+   "min_z": 0.0,
+   "bbox_mm": [
+    62.0,
+    62.0,
+    56.6
+   ],
+   "sealed_internal_voids": 0
+  }
+ ],
+ "hardware": [
+  "2 x M3.5 box screws from the old switch plate (box lugs, left and right)",
+  "2 x M3 countersunk bolts (length = bracket thickness at the hole + 5.4 mm; M3 x 16 for an 11 mm bracket) + 2 x M3 nuts, Voltaat"
+ ],
+ "designs": {
+  "khatam": {
+   "file": "shade_khatam_TR300.stl",
+   "mass_g": 67.1,
+   "watertight": true,
+   "min_z": 0.0,
+   "bbox_mm": [
+    86.0,
+    159.1,
+    154.4
+   ],
+   "flat_down_area_mm2": 593,
+   "largest_flat_facet_mm2": 1.25
+  },
+  "hexstar": {
+   "file": "shade_hexstar_TR300.stl",
+   "mass_g": 65.9,
+   "watertight": true,
+   "min_z": 0.0,
+   "bbox_mm": [
+    86.0,
+    159.1,
+    154.4
+   ],
+   "flat_down_area_mm2": 369,
+   "largest_flat_facet_mm2": 0.97
+  },
+  "rosette": {
+   "file": "shade_rosette_TR300.stl",
+   "mass_g": 67.2,
+   "watertight": true,
+   "min_z": 0.0,
+   "bbox_mm": [
+    86.0,
+    159.1,
+    154.4
+   ],
+   "flat_down_area_mm2": 516,
+   "largest_flat_facet_mm2": 0.35
+  },
+  "octstar": {
+   "file": "shade_octstar_TR300.stl",
+   "mass_g": 66.1,
+   "watertight": true,
+   "min_z": 0.0,
+   "bbox_mm": [
+    86.0,
+    159.1,
+    154.4
+   ],
+   "flat_down_area_mm2": 505,
+   "largest_flat_facet_mm2": 1.44
+  },
+  "smooth": {
+   "file": "shade_smooth_TR300.stl",
+   "mass_g": 60.5,
+   "watertight": true,
+   "min_z": 0.0,
+   "bbox_mm": [
+    86.0,
+    159.1,
+    154.4
+   ],
+   "flat_down_area_mm2": 0,
+   "largest_flat_facet_mm2": 0
+  }
+ },
+ "sun_Wh_per_day_doha_150_wall_170_camera": {
+  "Jun 21 (summer)": {
+   "no_shade": 15.02,
+   "v6": 0.1
+  },
+  "May 1 / Aug 12": {
+   "no_shade": 19.4,
+   "v6": 3.52
+  },
+  "Mar 21 / Sep 23 (equinox)": {
+   "no_shade": 28.65,
+   "v6": 14.56
+  },
+  "Feb 5 / Nov 6": {
+   "no_shade": 36.38,
+   "v6": 24.45
+  },
+  "Dec 21 (winter)": {
+   "no_shade": 37.62,
+   "v6": 26.67
+  }
+ },
+ "assumptions": "bracket = the repo's 20 deg wedge model (3 mm thin edge, 19 mm thick edge, 44 x 137 mm), holes 74 mm apart on its centre line; lens modelled 3 mm further out than that for safety"
+}

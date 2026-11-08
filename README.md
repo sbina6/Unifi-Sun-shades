@@ -144,53 +144,58 @@ wall + switch box  →  adapter  →  metal plate (flat)  or  20° wedge / v3 / 
 
 **Rebuild:** `python cad/wall_adapter.py && python cad/verify_adapter.py && python cad/adapter_viewer.py && node cad/adapter_shots.js && python cad/export_adapter.py`
 
-## v5a: one piece, centred on the switch box, Islamic geometric patterns
+## v5a: integrated wedge (superseded by v6)
 
-One Phrozen TR300 part: the sunshade, the 20° wedge, and a 2.0 mm 86 × 86 mm square that hides the Qatar / BS 4662 switch box, all centred on the box. The side walls carry a 0.6 mm raised relief in one of five patterns. The default is 56.9 g, against 134 g for v4 plus the earlier separate adapter.
+One printed part with an integrated 20° wedge, centred on the switch box, with Islamic geometric patterns and a nut-pocket plate mount. It was fixed to the wall with new holes above and below the box, which turned out to be the wrong fixing. Its files are kept in `v5a/`. v6 replaces it.
 
-![v5a](v5a/v5a_views.png)
+## v6: straight shade, your own angled bracket
 
-**Two separate joints**
-- **Part and square to the wall:** the doorbell kit's own 2 screws and plugs, in 2 new holes 60 mm above and below the box centre (120 mm apart). Counterbore Ø8.5 with a Ø4.2 hole, square to the wall, so any kit screw up to M4 fits. The part is its own drilling template. Check for conduit before drilling.
-- **Doorbell plate to the part:** 2 × M3 × 12 screws into 2 M3 nut pockets (5.7 AF × 2.6 deep) behind the front face. Each pocket is a 12.6 mm slide, so the nut finds the screw wherever the plate holes are (90–102 mm apart).
+One Phrozen TR300 part: a straight, symmetric shade centred on the Qatar / BS 4662 switch box, with an 86 × 86 mm backplate that hides the box. Seen from afar it is square to the wall. Up close, the doorbell sits inside it, angled, on the user's own angled bracket. There is no wedge in the printed part. The side walls carry Islamic geometric relief in one of five patterns.
 
-You can remove the doorbell without touching the wall fixing.
+![v6](v6/v6_views.png)
 
-**Designs** (`v5a/print_kit/designs/`, all watertight, one body, 150 mm tall as printed)
+**Two bolted joints, independent of each other**
+- **Shade to the wall:** the switch box's own 2 screws, left and right of the box (lugs 60.3 mm apart), countersunk flush in the 4.8 mm backplate. No drilling. The side walls stand 76 mm apart, outside both screws, so a screwdriver reaches them along the wall normal.
+- **Bracket to the shade:** 2 × M3 bolts through the bracket's two wall-screw holes (74 mm apart) into 2 M3 nut pockets (5.7 AF × 2.8 deep, open to the wall side, 4 mm slide). The pockets are 5.3 mm right of the box centre, which centres the angled doorbell inside the hood.
 
-![patterns](v5a/v5a_patterns.png)
+**Shade:** 76 mm wide, 1.6 mm walls, reach up to 64 mm from the wall. The edge is computed along the wall normal to sit just outside the camera picture (3° margin + 1.6 mm, lens modelled 3 mm further out to allow for a thicker bracket). Backplate 4.8 mm thick, hollow behind, with star openwork where the box opening is not behind it.
+
+**Designs** (`v6/print_kit/designs/`, all watertight, one body, 154 mm tall as printed)
+
+![patterns](v6/v6_patterns.png)
 
 | Pattern | Mass |
 |---|---|
-| 8-point star (default) | 56.9 g |
-| 6-point star | 56.2 g |
-| Rosette | 57.5 g |
-| Octagon and star | 56.8 g |
-| Smooth | 51.6 g |
+| 8-point star (default) | 67.1 g |
+| 6-point star | 65.9 g |
+| Rosette | 67.2 g |
+| Octagon and star | 66.1 g |
+| Smooth | 60.5 g |
 
-Patterns are generated in `cad/shade_patterns.py` from tilings (stars with crosses, hexagrams, circle arrangement, octagon-square), each cell shrunk by half the bar width so every bar is 1.4 mm. The scalloped edge has 12 mm arches 3 mm deep. It only shortens the lip, so the camera picture stays clear.
+Patterns are generated in `cad/shade_patterns.py` from tilings (stars with crosses, hexagrams, circle arrangement, octagon-square), each cell shrunk by half the bar width so every bar is 1.4 mm.
 
-**Sun** (Doha, 150° wall, camera at 170°; `study/v5a_hood_170.json`), Wh/day on the doorbell:
+**Sun** (Doha, 150° wall, camera at 170°; `study/v6_hood_170.json`), Wh/day on the doorbell:
 
-| Date | No shade | v4 | v5a |
+| Date | No shade | v4 | v6 |
 |---|---|---|---|
-| Jun 21 | 15.0 | 0.2 | 0.3 |
-| May 1 / Aug 12 | 19.4 | 2.9 | 3.6 |
-| Mar 21 / Sep 23 | 28.6 | 11.7 | 12.9 |
-| Feb 5 / Nov 6 | 36.4 | 20.9 | 22.2 |
-| Dec 21 | 37.6 | 23.6 | 24.9 |
+| Jun 21 | 15.0 | 0.2 | 0.1 |
+| May 1 / Aug 12 | 19.4 | 2.9 | 3.5 |
+| Mar 21 / Sep 23 | 28.6 | 11.7 | 14.6 |
+| Feb 5 / Nov 6 | 36.4 | 20.9 | 24.4 |
+| Dec 21 | 37.6 | 23.6 | 26.7 |
 
-The scalloped edge costs a little shade against v4, and the pattern has no effect. A bigger shade would not shade better (v2 sweep, `study/sweep_150.json`).
+The deeper hood matches v4 in midsummer. Otherwise it lets in more low side sun, because the walls must stand 11–13 mm away from the doorbell to clear the box screws. The pattern has no effect.
 
-**Checks** (`v5a/verify_report.json`): all pass.
-- Doorbell and plate: 0 mm³ overlap.
+**Checks** (`v6/verify_report.json`): all pass.
+- Doorbell, plate and bracket: 0 mm³ overlap with the part; 3.5 mm minimum gap to the doorbell.
 - Hook-on at 10°, 15° and 20° with a 4 mm lift: clear.
 - Camera picture covered: 0%.
-- 36 screw, nut, driver, lock-screw and cable paths with 0 mm³ of plastic, including a nut dropped into each pocket from the wall side across its whole slide, and kit screws drawn at Ø4 with Ø8 heads.
-- Plate-screw tips 2.0 mm off the wall.
-- The box is hidden from the front.
-- STLs watertight, 1 body, no sealed voids.
+- 30 screw, nut, driver, lock-screw and cable paths with 0 mm³ of plastic, including a nut dropped into each pocket from the wall side across its whole slide, and a Ø6 driver along each box screw.
+- The box is hidden from the front. The doorbell plate's Ø18 cable hole falls inside the cable window.
+- STLs watertight, 1 body, no sealed voids; nothing larger than 1.5 mm² flatter than 45° facing down.
 
-**Files:** `v5a/sunshade_hood_v5a.step`, `v5a/print_kit/` (STLs, PRINT_LIST.md, manifest.json), `v5a/sunshade_doorbell_lite_v5a_print_kit.zip`, [shade designer](https://claude.ai/artifact/EjEeACi4wuyu7NsmFokM8P) (patterns, edge, colours, mounting points).
+**Assumptions to confirm** (they set the nut pockets and the lip): the bracket's two wall-screw holes are 74 mm apart on its centre line; it is the repo's wedge model (3 mm thin edge, 19 mm thick edge, 44 × 137 mm). If the real bracket differs, the pockets move and the lip is recomputed.
 
-**Rebuild:** `python cad/sunshade_v5a.py --pattern khatam --edge scallop && python cad/verify_v5.py v5a && python cad/sun_eval.py v5a/hood.brep study/v5a_hood_170.json 170 150 && python cad/coupon_v3.py v5a && CAD_VER=v5a python cad/export_kit.py && python cad/export_v5_designs.py scallop`. For the viewer: `python cad/sunshade_v5a.py --base --edge scallop` and `--edge straight`, then `python cad/v5_viewer.py && node cad/v5_shots.js`. `sun_eval.py` reads `v1/device.brep`, which `cad/sunshade.py` writes.
+**Files:** `v6/sunshade_hood_v6.step`, `v6/print_kit/` (STLs, PRINT_LIST.md, manifest.json), `v6/sunshade_doorbell_lite_v6_print_kit.zip`, [shade designer](https://claude.ai/artifact/EjEeACi4wuyu7NsmFokM8P) (patterns, colours, the angled doorbell, mounting points).
+
+**Rebuild:** `python cad/sunshade_v6.py --pattern khatam && python cad/verify_v6.py && python cad/sun_eval.py v6/hood.brep study/v6_hood_170.json 170 150 && python cad/coupon_v3.py v6 && CAD_VER=v6 python cad/export_kit.py && python cad/export_v6_designs.py`. For the viewer: `python cad/sunshade_v6.py --base`, then `python cad/v6_viewer.py && node cad/v6_shots.js`. `sun_eval.py` reads `v1/device.brep`, which `cad/sunshade.py` writes.

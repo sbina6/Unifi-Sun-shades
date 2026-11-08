@@ -3,10 +3,11 @@
 ## The user's devices and site (read first)
 - Doorbell: **Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite)**, 137 × 40 × 26.4 mm, metal plate 31 × 125 × 1.6, wall screws M3 on the centreline 74 mm c/c, Ø18 cable hole 88 mm below the top. Geometry lives in `cad/sunshade.py` and `v3/v3_geom.json`.
 - Site: Doha, wall facing 150°, doorbell on a 20° wedge (v3/v4 replace it), camera looking ~170°.
-- The doorbell is mounted over a Qatar / UK BS 4662 switch box (75 mm opening, lugs 60.3 mm c/c). Current design: `v5a/` (one piece: shade + wedge + 86 mm square, ~57 g, white doorbell). `adapter/` is the earlier two-piece bridge.
-- The user wants one-piece parts, light weight, and the doorbell CENTRED on the box: never move it off-centre to solve a fixing problem; ask instead.
-- Two separate joints: part to wall with the doorbell kit's own screws; doorbell plate to part with M3 screws into nut pockets.
-- Design language: Islamic geometric art (stars, rosettes, mashrabiya-style lattices, scalloped arches). The arched car-shade / pergola look was rejected: do not use it or its reference image. A bigger shade does not shade better (v2 sweep), so size is a looks-only choice.
+- The doorbell is mounted over a Qatar / UK BS 4662 switch box (75 mm opening, lugs 60.3 mm c/c). Current design: `v6/` (one printed part: a STRAIGHT 76 mm shade + 86 mm backplate, ~67 g, white doorbell). The doorbell sits ANGLED inside it on the user's OWN angled bracket (the stock 20° wedge), so there is no wedge in the printed part. `v5a/` (integrated wedge) and `adapter/` are earlier designs.
+- The user wants one-piece parts, light weight, and everything CENTRED on the box: never move the doorbell off-centre to solve a fixing problem; ask instead.
+- Two separate joints, both bolted: (1) shade to wall with the switch box's OWN 2 screws, left and right of the box (the lugs, 60.3 mm apart): never invent new wall holes; (2) the user's bracket to the shade with M3 bolts into M3 nut pockets (74 mm apart).
+- Design language: Islamic geometric art (stars, rosettes, mashrabiya-style lattices, pointed arches). The arched car-shade / pergola look was rejected: do not use it or its reference image. A bigger shade does not shade better (v2 sweep), so size is a looks-only choice.
+- Curved lip cuts (`Face.make_surface_from_array_of_points`) fail silently at some sampling steps and on scalloped edges: always tessellate at ≤0.03 mm and check watertight and length (`cad/sunshade_v6.py: mesh_ok / cut_lip`). Coarser tessellation gives false cracks.
 
 ## Toolchain
 - CAD Python: `/tmp/cadenv/bin/python` (build123d 0.13.0, cadquery-ocp-novtk 8.0.1.1.0, shapely 2.2.0, trimesh 5.2.0, numpy 2.5.4, scipy 1.18.1, matplotlib 3.11.2, pillow, ezdxf). If it's missing, rebuild it:

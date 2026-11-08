@@ -1,0 +1,67 @@
+{
+ "khatam": {
+  "file": "shade_khatam_TR300.stl",
+  "mass_g": 67.1,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   86.0,
+   159.1,
+   154.4
+  ],
+  "flat_down_area_mm2": 593,
+  "largest_flat_facet_mm2": 1.25
+ },
+ "hexstar": {
+  "file": "shade_hexstar_TR300.stl",
+  "mass_g": 65.9,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   86.0,
+   159.1,
+   154.4
+  ],
+  "flat_down_area_mm2": 369,
+  "largest_flat_facet_mm2": 0.97
+ },
+ "rosette": {
+  "file": "shade_rosette_TR300.stl",
+  "mass_g": 67.2,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   86.0,
+   159.1,
+   154.4
+  ],
+  "flat_down_area_mm2": 516,
+  "largest_flat_facet_mm2": 0.35
+ },
+ "octstar": {
+  "file": "shade_octstar_TR300.stl",
+  "mass_g": 66.1,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   86.0,
+   159.1,
+   154.4
+  ],
+  "flat_down_area_mm2": 505,
+  "largest_flat_facet_mm2": 1.44
+ },
+ "smooth": {
+  "file": "shade_smooth_TR300.stl",
+  "mass_g": 60.5,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   86.0,
+   159.1,
+   154.4
+  ],
+  "flat_down_area_mm2": 0,
+  "largest_flat_facet_mm2": 0
+ }
+}
