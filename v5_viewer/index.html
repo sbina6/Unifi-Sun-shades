@@ -1,4 +1,4 @@
-<title>Doorbell Lite Sunshade v5</title>
+<title>Doorbell Lite Shade Designer</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=swap">
@@ -10,7 +10,7 @@
   --fg: #1d2224;
   --muted: #5d676a;
   --line: #c9cec9;
-  --accent: #c8661d;      /* resin part highlight */
+  --accent: #b4571a;      /* mounting highlight */
   --ok: #2f7d4f;
   --stage: #dfe2de;
   --display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
@@ -25,22 +25,35 @@
   --accent: #e48a42; --ok: #5fbf86; --stage: #1b2021; color-scheme: dark }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 14px; line-height: 1.45; }
-.app { display: grid; grid-template-columns: minmax(0, 1fr) 340px; height: 100%;
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 350px; height: 100%;
   padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px)); }
-.stage { position: relative; background: var(--stage); min-height: 0; }
+.stage { position: relative; background: var(--stage); min-height: 0; overflow: hidden; }
 canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 .hint { position: absolute; left: 12px; bottom: 10px; font: 12px var(--mono); color: var(--muted); }
+.tag { position: absolute; left: 0; top: 0; pointer-events: none; font: 500 11px var(--mono); color: #fff; background: var(--accent);
+  padding: 2px 6px; border-radius: 3px; white-space: nowrap; transform: translate(-50%, -140%); }
 .rail { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; min-width: 0;
   padding-block: 20px 28px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: flex; flex-direction: column; gap: 20px; }
+  display: flex; flex-direction: column; gap: 18px; }
 h1 { font: 600 24px/1.1 var(--display); letter-spacing: .01em; margin: 0; text-wrap: balance; }
 .sub { color: var(--muted); margin: 6px 0 0; }
 section { display: flex; flex-direction: column; gap: 8px; }
 .label { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
 .seg { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg.two { grid-template-columns: 1fr 1fr; }
+.seg.four { grid-template-columns: repeat(4, 1fr); }
 .seg button { font: 500 13px var(--body); padding: 8px 4px; background: transparent; color: var(--fg); border: 0; border-left: 1px solid var(--line); cursor: pointer; }
 .seg button:first-child { border-left: 0; }
 .seg button[aria-pressed="true"] { background: var(--fg); color: var(--panel); }
+.designs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.designs button { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 8px; background: transparent; color: var(--fg);
+  border: 1px solid var(--line); border-radius: 6px; cursor: pointer; font: 500 13px var(--body); text-align: left; }
+.designs button[aria-pressed="true"] { border-color: var(--fg); box-shadow: inset 0 0 0 1px var(--fg); }
+.designs canvas { width: 100%; height: 54px; border-radius: 3px; background: var(--stage); }
+.sw { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.sw button { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line); cursor: pointer; padding: 0; }
+.sw button[aria-pressed="true"] { border-color: var(--fg); box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--fg); }
+.sw span { font: 12px var(--mono); color: var(--muted); margin-right: 4px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .row { display: flex; align-items: center; gap: 10px; }
 .row label { flex: 1; }
@@ -50,17 +63,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 13px; }
 dt { color: var(--muted); }
 dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; }
-ul.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
-ul.checks li { display: grid; grid-template-columns: 16px 1fr; gap: 6px; }
-ul.checks li::before { content: "✓"; color: var(--ok); font-weight: 600; }
 .note { font-size: 13px; color: var(--muted); margin: 0; }
-.seg.two { grid-template-columns: 1fr 1fr; }
-.tbl { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font-size: 13px; }
-th, td { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
-th:first-child, td:first-child { text-align: left; }
-th { font: 500 11px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-td.hl { font-family: var(--mono); color: var(--accent); }
+.legend { display: none; flex-direction: column; gap: 6px; font-size: 13px; }
+.legend.on { display: flex; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; vertical-align: -1px; }
 @media (max-width: 760px) {
   .app { grid-template-columns: 1fr; grid-template-rows: 62vh auto; height: auto; }
   .rail { border-left: 0; border-top: 1px solid var(--line); }
@@ -68,23 +74,43 @@ td.hl { font-family: var(--mono); color: var(--accent); }
 </style>
 
 <div class="app">
-  <div class="stage">
+  <div class="stage" id="stage">
     <canvas id="c" aria-label="3D view of the one-piece sunshade on the switch box"></canvas>
     <div class="hint">drag to orbit · scroll or pinch to zoom</div>
   </div>
   <aside class="rail">
     <div>
-      <h1>Doorbell Lite sunshade v5</h1>
-      <p class="sub">One printed part: sunshade, 20° wedge and switch-box cover, centred on the Qatar switch box. Two shapes to choose from.</p>
+      <h1>Doorbell Lite shade designer</h1>
+      <p class="sub">The one-piece shade A, centred on the Qatar switch box. Pick a side-wall pattern, an edge and colours.</p>
     </div>
 
     <section>
-      <span class="label">Variant</span>
-      <div class="seg two" role="group" aria-label="Variant">
-        <button id="var-a" aria-pressed="true">A · centred v4 shape</button>
-        <button id="var-b" aria-pressed="false">B · box-sized</button>
+      <span class="label">Pattern on the side walls</span>
+      <div class="designs" id="designs"></div>
+    </section>
+
+    <section>
+      <span class="label">Edge</span>
+      <div class="seg two" role="group" aria-label="Edge">
+        <button id="e-straight" aria-pressed="false">Straight</button>
+        <button id="e-scallop" aria-pressed="true">Scalloped</button>
       </div>
-      <dl id="facts"></dl>
+    </section>
+
+    <section>
+      <span class="label">Colours</span>
+      <div class="sw" id="shadeSw" role="group" aria-label="Shade colour"><span>Shade</span></div>
+      <div class="sw" id="dbSw" role="group" aria-label="Doorbell colour"><span>Doorbell</span></div>
+    </section>
+
+    <section>
+      <span class="label">Mounting points</span>
+      <label class="chk"><input id="mount" type="checkbox"> Show how it is fixed (see-through)</label>
+      <div class="legend" id="legend">
+        <div><i style="background:#e8762c"></i>Wall bolts: the doorbell kit's 2 screws, 120 mm apart</div>
+        <div><i style="background:#22b8cf"></i>M3 nut pockets: 5.7 mm across flats, 12.6 mm slide</div>
+        <div><i style="background:#c3c8cc"></i>Plate screws: 2 × M3 × 12 into the nuts</div>
+      </div>
     </section>
 
     <section>
@@ -92,15 +118,12 @@ td.hl { font-family: var(--mono); color: var(--accent); }
       <div class="seg" role="group" aria-label="What to show">
         <button id="m-all" aria-pressed="true">Doorbell</button>
         <button id="m-plate" aria-pressed="false">Plate only</button>
-        <button id="m-none" aria-pressed="false">Part only</button>
+        <button id="m-none" aria-pressed="false">Shade only</button>
       </div>
-    </section>
-
-    <section>
-      <span class="label">View</span>
-      <div class="seg" role="group" aria-label="Camera">
+      <div class="seg four" role="group" aria-label="Camera">
         <button id="v-front" aria-pressed="true">Front</button>
         <button id="v-side" aria-pressed="false">Side</button>
+        <button id="v-close" aria-pressed="false">Pattern</button>
         <button id="v-back" aria-pressed="false">Back</button>
       </div>
       <div class="row"><label for="explode">Pull the doorbell out</label><span id="explode-v" class="label">0 mm</span></div>
@@ -109,22 +132,10 @@ td.hl { font-family: var(--mono); color: var(--accent); }
     </section>
 
     <section>
-      <span class="label">Sun on the doorbell, Doha, Wh/day</span>
-      <div class="tbl"><table>
-        <thead><tr><th>Date</th><th>No shade</th><th>v4</th><th>A</th><th>B</th></tr></thead>
-        <tbody id="sun"><tr><td>Jun 21</td><td>15.0</td><td>0.2</td><td class="hl">0.2</td><td class="hl">0.5</td></tr>
-          <tr><td>May 1 / Aug 12</td><td>19.4</td><td>2.9</td><td class="hl">3.0</td><td class="hl">5.8</td></tr>
-          <tr><td>Mar 21 / Sep 23</td><td>28.6</td><td>11.7</td><td class="hl">11.8</td><td class="hl">17.7</td></tr>
-          <tr><td>Feb 5 / Nov 6</td><td>36.4</td><td>20.9</td><td class="hl">21.1</td><td class="hl">26.3</td></tr>
-          <tr><td>Dec 21</td><td>37.6</td><td>23.6</td><td class="hl">23.8</td><td class="hl">27.6</td></tr></tbody>
-      </table></div>
-    </section>
-
-    <p class="note">B's wider hood leaves 10–16 mm gaps beside the doorbell, so low side sun gets in: it lets in about 1.5–2× more sun than A outside midsummer. A shades exactly like v4.</p>
-
-    <section>
-      <span class="label">Checks (verify_report.json)</span>
-      <ul class="checks" id="checks"><li>Doorbell and plate: 0 mm³ overlap (side gap A 2.4 mm, B 3.6 mm)</li><li>Hook-on at 10°, 15°, 20° tilt with 4 mm lift: clear on both</li><li>Camera picture covered: 0% on both</li><li>Screws, Ø6 drivers, plate nuts, lock screw and cable: A 28 paths, B 30 paths, 0 mm³ of plastic</li><li>Switch box hidden from the front on both</li><li>STLs watertight, 1 body, no sealed voids; only 0.6 mm lattice ledges below 45°</li></ul>
+      <span class="label">This design</span>
+      <dl id="facts"></dl>
+      <p class="note">In this viewer the pattern is tinted darker so it can be seen. The printed part is one colour, and the pattern shows as 0.6 mm relief.</p>
+      <p class="note">The doorbell's front details (glass, lens, button) are drawn from memory of the product, so treat them as approximate. The body colour is the real white.</p>
     </section>
   </aside>
 </div>
@@ -140,9 +151,10 @@ td.hl { font-family: var(--mono); color: var(--accent); }
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { STLLoader } from "three/addons/loaders/STLLoader.js";
+import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
 
-const D = window.MESHES._dims;
-const canvas = document.getElementById("c");
+const D = window.MESHES._dims, LAB = window.MESHES._labels, MASS = window.MESHES._mass;
+const canvas = document.getElementById("c"), stage = document.getElementById("stage");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 const scene = new THREE.Scene();
@@ -151,74 +163,174 @@ const controls = new OrbitControls(cam, canvas);
 controls.enableDamping = true;
 const TARGET = new THREE.Vector3(0, 10, 18);
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f8a, 1.1));
-const key = new THREE.DirectionalLight(0xfff4e6, 2.0); key.position.set(150, 220, 260); scene.add(key);
-const fill = new THREE.DirectionalLight(0xdfe8ff, 0.7); fill.position.set(-200, -60, -180); scene.add(fill);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f8a, 1.15));
+const key = new THREE.DirectionalLight(0xfff4e6, 2.1); key.position.set(150, 220, 260); scene.add(key);
+const fill = new THREE.DirectionalLight(0xdfe8ff, 0.8); fill.position.set(-200, -60, -180); scene.add(fill);
 
-const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const loader = new STLLoader();
-function load(name, color, opts = {}) {
+const geo = name => {
   const bin = Uint8Array.from(atob(window.MESHES[name]), c => c.charCodeAt(0)).buffer;
-  const g = loader.parse(bin); g.computeVertexNormals();
-  const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color, roughness: .55, metalness: opts.metal ?? 0, side: THREE.DoubleSide, flatShading: !!opts.flat }));
-  scene.add(m); return m;
-}
-const V = {};
-for (const k of ["v5a", "v5b"]) V[k] = { part: load(k + "_part", 0x3a3f42, { flat: true }), device: load(k + "_device", 0x1f2224), plate: load(k + "_plate", 0x9aa0a4, { metal: .6 }) };
-const FACTS = {
-  v5a: [["Mass", "58.0 g, TR300"], ["Size", "86 × 158 mm on the wall"], ["Fixing", "2 × M3 + anchors, new holes 120 mm apart above and below the box, hidden under the plate"], ["Box screws", "not used"]],
-  v5b: [["Mass", "70.0 g, TR300"], ["Size", "86 × 160 mm on the wall"], ["Fixing", "the box's own 2 screws, inside the hood beside the wedge"], ["Drilling", "none"]],
+  const g = loader.parse(bin); return toCreasedNormals(g, 0.6);
 };
+const T = new THREE.Matrix4().set(...D.M);          // doorbell frame -> wall frame (row-major)
+const SHADE = { Grey: 0x8c9094, Charcoal: 0x3c4043, "Light grey": 0xc6c9cb, Sand: 0xb7a78c };
+const DB = { White: 0xf3f3f0, Black: 0x1c1d1f };
+const shadeMat = new THREE.MeshStandardMaterial({ color: SHADE.Grey, roughness: .62, metalness: 0, side: THREE.DoubleSide });
+const dbMat = new THREE.MeshStandardMaterial({ color: DB.White, roughness: .38, metalness: 0 });
+
+// shade bases (wall frame) and relief (doorbell frame)
+const base = { straight: new THREE.Mesh(geo("part_straight"), shadeMat), scallop: new THREE.Mesh(geo("part_scallop"), shadeMat) };
+scene.add(base.straight, base.scallop);
+const lat = new THREE.Group(); lat.matrixAutoUpdate = false; lat.matrix.copy(T); scene.add(lat);
+
+// doorbell (doorbell frame), plate
+const dbG = new THREE.Group(); dbG.matrixAutoUpdate = false; scene.add(dbG);
+const plG = new THREE.Group(); plG.matrixAutoUpdate = false; scene.add(plG);
+dbG.add(new THREE.Mesh(geo("device"), dbMat));
+const dark = new THREE.MeshStandardMaterial({ color: 0x0c0e11, roughness: .12, metalness: .2 });
+function rrect(w, h, r) { const s = new THREE.Shape(), x = -w / 2, y = -h / 2;
+  s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r); s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r); s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y); return s; }
+const F = D.FRONT;
+const glass = new THREE.Mesh(new THREE.ExtrudeGeometry(rrect(33, 42, 4), { depth: .5, bevelEnabled: false }), dark); glass.position.set(0, -24, F - .05); dbG.add(glass);
+const cyl = (r, h, m) => { const c = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 40), m); c.rotation.x = Math.PI / 2; return c; };
+const lensRing = cyl(6.5, .8, new THREE.MeshStandardMaterial({ color: 0x15171a, roughness: .3, metalness: .5 })); lensRing.position.set(0, D.LENS_Y, F + .45); dbG.add(lensRing);
+const lensGlass = cyl(4, .9, new THREE.MeshStandardMaterial({ color: 0x0a1424, roughness: .05, metalness: .6 })); lensGlass.position.set(0, D.LENS_Y, F + .5); dbG.add(lensGlass);
+const btnMat = new THREE.MeshStandardMaterial({ color: DB.White, roughness: .35 });
+const btn = cyl(8, .9, btnMat); btn.position.set(0, -100, F + .1); dbG.add(btn);
+const led = new THREE.Mesh(new THREE.TorusGeometry(9.6, .7, 12, 48), new THREE.MeshStandardMaterial({ color: 0x4fc3ff, emissive: 0x2a9fe0, emissiveIntensity: 1.2 })); led.position.set(0, -100, F + .3); dbG.add(led);
+const plate = new THREE.Mesh(geo("plate"), new THREE.MeshStandardMaterial({ color: 0xb9bec2, roughness: .35, metalness: .7, side: THREE.DoubleSide })); plG.add(plate);
+
+// mounting overlay (doorbell frame)
+const onTop = m => { m.depthTest = false; return m; };
+const mk = new THREE.Group(); mk.matrixAutoUpdate = false; mk.matrix.copy(T); mk.visible = false; scene.add(mk);
+const tags = [];
+function tag(text, v3) { const e = document.createElement("div"); e.className = "tag"; e.textContent = text; e.hidden = true; stage.appendChild(e); tags.push({ e, v3: v3.clone() }); }
+{
+  const N = new THREE.Vector3(...D.normal), Z = new THREE.Vector3(0, 0, 1);
+  D.bolt_wall.forEach((w, i) => {
+    const a = new THREE.Vector3(...w), b = new THREE.Vector3(0, D.bolts_y[i], D.SEAT), len = a.distanceTo(b);
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, len, 20), onTop(new THREE.MeshStandardMaterial({ color: 0xe8762c })));
+    m.position.copy(a.clone().add(b).multiplyScalar(.5)); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), N); mk.add(m);
+    const h = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 2.4, 24), onTop(new THREE.MeshStandardMaterial({ color: 0xe8762c })));
+    h.position.copy(b.clone().add(N.clone().multiplyScalar(-1.2 + 3))); h.quaternion.copy(m.quaternion); mk.add(h);
+    tag("wall bolt", b.clone().add(new THREE.Vector3(0, 0, 4)));
+  });
+  D.pockets.forEach((y, i) => {
+    const p = new THREE.Mesh(new THREE.BoxGeometry(5.7, 12.6, 2.6), onTop(new THREE.MeshStandardMaterial({ color: 0x22b8cf, transparent: true, opacity: .9 })));
+    p.position.set(0, y, -1.3); p.renderOrder = 10; mk.add(p);
+    const s = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 11, 16), onTop(new THREE.MeshStandardMaterial({ color: 0xc3c8cc, metalness: .7, roughness: .3 })));
+    s.rotation.x = Math.PI / 2; s.position.set(0, y - 2, 3.6 - 5.5); mk.add(s);
+    const hd = new THREE.Mesh(new THREE.CylinderGeometry(3, 1.5, 1.4, 20), onTop(new THREE.MeshStandardMaterial({ color: 0xc3c8cc, metalness: .7, roughness: .3 })));
+    hd.rotation.x = Math.PI / 2; hd.position.set(0, y - 2, 3.8 + .7); mk.add(hd);
+    tag("M3 nut pocket", new THREE.Vector3(0, y, -1.3));
+  });
+}
 
 // wall with the 75 mm box opening, and the box behind it
 const wallGrp = new THREE.Group(); scene.add(wallGrp);
 const wallMat = new THREE.MeshStandardMaterial({ color: 0xcfcfc8, roughness: .95, side: THREE.DoubleSide });
 {
-  const s = new THREE.Shape(); s.moveTo(-160, -180); s.lineTo(160, -180); s.lineTo(160, 220); s.lineTo(-160, 220); s.closePath();
-  const h = new THREE.Path(), b = D.BOX / 2; h.moveTo(-b, -b); h.lineTo(-b, b); h.lineTo(b, b); h.lineTo(b, -b); h.closePath(); s.holes.push(h);
-  const w = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: 20, bevelEnabled: false }), wallMat);
-  w.position.z = -20; wallGrp.add(w);
+  const s = new THREE.Shape(); s.moveTo(-170, -190); s.lineTo(170, -190); s.lineTo(170, 230); s.lineTo(-170, 230); s.closePath();
+  const h = new THREE.Path(), b = 37.5; h.moveTo(-b, -b); h.lineTo(-b, b); h.lineTo(b, b); h.lineTo(b, -b); h.closePath(); s.holes.push(h);
+  const w = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: 20, bevelEnabled: false }), wallMat); w.position.z = -20; wallGrp.add(w);
   const boxMat = new THREE.MeshStandardMaterial({ color: 0x8e9396, roughness: .6, metalness: .3, side: THREE.DoubleSide });
   const depth = 35, t = 1;
-  for (const [x, y, sx, sy] of [[b, 0, t, D.BOX], [-b, 0, t, D.BOX], [0, b, D.BOX, t], [0, -b, D.BOX, t]]) {
-    const p = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, depth), boxMat); p.position.set(x, y, -depth / 2); wallGrp.add(p);
-  }
-  const back = new THREE.Mesh(new THREE.BoxGeometry(D.BOX, D.BOX, t), boxMat); back.position.z = -depth; wallGrp.add(back);
-  for (const sx of [-1, 1]) {   // screw lugs
-    const lug = new THREE.Mesh(new THREE.BoxGeometry(8, 10, 3), boxMat); lug.position.set(sx * (b - 4), 0, -1.5); wallGrp.add(lug);
-  }
+  for (const [x, y, sx, sy] of [[b, 0, t, 75], [-b, 0, t, 75], [0, b, 75, t], [0, -b, 75, t]]) { const p = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, depth), boxMat); p.position.set(x, y, -depth / 2); wallGrp.add(p); }
+  const back = new THREE.Mesh(new THREE.BoxGeometry(75, 75, t), boxMat); back.position.z = -depth; wallGrp.add(back);
 }
 
-let ver = "v5a", mode = "all", explode = 0;
-function apply() {
-  for (const [k, g] of Object.entries(V)) {
-    const on = k === ver;
-    g.part.visible = on;
-    g.device.visible = on && mode === "all"; g.device.position.z = explode;
-    g.plate.visible = on && mode !== "none"; g.plate.position.z = explode * 0.5;
+// side relief from polygons
+let pattern = "khatam", edge = "scallop", mode = "all", explode = 0, xray = false;
+const reliefMat = new THREE.MeshStandardMaterial({ color: 0x6f7377, roughness: .62, side: THREE.DoubleSide });   // tinted darker only in the viewer, so the pattern reads
+const tint = c => new THREE.Color(c).multiplyScalar(.74);
+function buildRelief() {
+  while (lat.children.length) { const c = lat.children.pop(); c.geometry.dispose(); }
+  const P = window.PATTERNS[edge][pattern];
+  for (const s of [1, -1]) {
+    const shapes = P[String(s)].map(p => { const sh = new THREE.Shape(p.o.map(q => new THREE.Vector2(q[0], q[1])));
+      for (const h of p.h) sh.holes.push(new THREE.Path(h.map(q => new THREE.Vector2(q[0], q[1])))); return sh; });
+    if (!shapes.length) continue;
+    const m = new THREE.Mesh(new THREE.ExtrudeGeometry(shapes, { depth: D.LAT_H, bevelEnabled: false, curveSegments: 1 }), reliefMat);
+    m.matrixAutoUpdate = false;
+    m.matrix.set(0, 0, s, s * D.XO,   0, 1, 0, 0,   1, 0, 0, 0,   0, 0, 0, 1);
+    lat.add(m);
   }
+}
+const z = new THREE.Matrix4();
+function apply() {
+  base.straight.visible = edge === "straight"; base.scallop.visible = edge === "scallop";
+  dbG.matrix.copy(T).multiply(z.makeTranslation(0, 0, explode)); dbG.visible = mode === "all" && !xray;
+  plG.matrix.copy(T).multiply(z.makeTranslation(0, 0, explode * .5)); plG.visible = mode !== "none";
+  for (const m of [shadeMat, reliefMat]) { m.transparent = xray; m.opacity = xray ? .26 : 1; m.depthWrite = !xray; }
+  plate.material.transparent = xray; plate.material.opacity = xray ? .5 : 1;
+  mk.visible = xray; document.getElementById("legend").classList.toggle("on", xray);
   document.getElementById("explode-v").textContent = explode + " mm";
-  document.getElementById("facts").innerHTML = FACTS[ver].map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("");
+  const g = MASS[edge][pattern];
+  document.getElementById("facts").innerHTML = [["Pattern", LAB[pattern]], ["Edge", edge === "scallop" ? "scalloped, 12 mm arches" : "straight"], ["Printed mass", "≈ " + g.toFixed(0) + " g, TR300 resin"],
+    ["Fixing to wall", "kit screws, 2 new holes"], ["Fixing to plate", "M3 × 12 into nut pockets"]].map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("");
 }
 function press(ids, id) { for (const i of ids) document.getElementById(i).setAttribute("aria-pressed", String(i === id)); }
-for (const k of ["a", "b"]) document.getElementById("var-" + k).addEventListener("click", () => { ver = "v5" + k; press(["var-a", "var-b"], "var-" + k); apply(); });
-for (const k of ["all", "plate", "none"]) document.getElementById("m-" + k).addEventListener("click", () => { mode = k; press(["m-all", "m-plate", "m-none"], "m-" + k); apply(); });
-const VIEWS = { front: [70, 110, 440], side: [-450, 60, 150], back: [-120, 90, -400] };
-function view(k) {
-  const [x, y, z] = VIEWS[k]; cam.position.set(x, y, z); controls.target.copy(TARGET); controls.update();
-  press(["v-front", "v-side", "v-back"], "v-" + k);
-  if (k === "back") { document.getElementById("wall").checked = false; wallGrp.visible = false; }
+
+// design thumbnails drawn from the same polygons (side wall seen from outside)
+const dz = document.getElementById("designs");
+function thumb(name) {
+  const c = document.createElement("canvas"); c.width = 220; c.height = 108;
+  const g = c.getContext("2d"), P = window.PATTERNS.scallop[name]["-1"];
+  g.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--stage"); g.fillRect(0, 0, 220, 108);
+  g.save(); g.translate(8, 104); const k = .72; g.scale(k, -k * 0.0 + -k); g.rotate(0);
+  g.fillStyle = "#7d8185";
+  // draw rotated so the wall's long axis runs left-right: (z, y) -> (x = -y*? , y = z)
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  const ax = q => 6 + (-q[1] - 10) * 1.38, ay = q => 100 - (q[0] + 2) * 1.9;
+  if (P.length) for (const p of P) { g.beginPath(); p.o.forEach((q, i) => i ? g.lineTo(ax(q), ay(q)) : g.moveTo(ax(q), ay(q))); g.closePath();
+    for (const h of p.h) { h.forEach((q, i) => i ? g.lineTo(ax(q), ay(q)) : g.moveTo(ax(q), ay(q))); g.closePath(); } g.fill("evenodd"); }
+  else { g.fillStyle = "#7d8185"; g.fillRect(6, 56, 200, 44); }
+  g.restore(); return c;
 }
+for (const name of Object.keys(LAB)) {
+  const b = document.createElement("button"); b.id = "d-" + name; b.setAttribute("aria-pressed", String(name === pattern));
+  b.append(thumb(name)); b.append(LAB[name]);
+  b.addEventListener("click", () => { pattern = name; for (const k of Object.keys(LAB)) document.getElementById("d-" + k).setAttribute("aria-pressed", String(k === name)); buildRelief(); apply(); });
+  dz.appendChild(b);
+}
+function swatches(el, map, onPick, first) {
+  for (const [name, hex] of Object.entries(map)) {
+    const b = document.createElement("button"); b.title = name; b.setAttribute("aria-label", name); b.style.background = "#" + hex.toString(16).padStart(6, "0");
+    b.setAttribute("aria-pressed", String(name === first));
+    b.addEventListener("click", () => { for (const x of el.querySelectorAll("button")) x.setAttribute("aria-pressed", "false"); b.setAttribute("aria-pressed", "true"); onPick(hex); });
+    el.appendChild(b);
+  }
+}
+swatches(document.getElementById("shadeSw"), SHADE, h => { shadeMat.color.setHex(h); reliefMat.color.copy(tint(h)); }, "Grey");
+reliefMat.color.copy(tint(SHADE.Grey));
+swatches(document.getElementById("dbSw"), DB, h => { dbMat.color.setHex(h); btnMat.color.setHex(h); }, "White");
+
+for (const k of ["straight", "scallop"]) document.getElementById("e-" + k).addEventListener("click", () => { edge = k; press(["e-straight", "e-scallop"], "e-" + k); buildRelief(); apply(); });
+for (const k of ["all", "plate", "none"]) document.getElementById("m-" + k).addEventListener("click", () => { mode = k; press(["m-all", "m-plate", "m-none"], "m-" + k); apply(); });
+const VIEWS = { front: [70, 110, 440], side: [-450, 60, 150], close: null, back: [-120, 90, -400] };
+function view(k) {
+  if (k === "close") {   // the visible side wall: face-on, right-hand side as you face the doorbell
+    const tg = new THREE.Vector3(D.XO, -50, 14).applyMatrix4(T), dir = new THREE.Vector3(1, 0, 0).transformDirection(T);
+    controls.target.copy(tg); cam.position.copy(tg).addScaledVector(dir, 230).add(new THREE.Vector3(0, 8, 0));
+  } else { const [x, y, zz] = VIEWS[k]; cam.position.set(x, y, zz); controls.target.copy(TARGET); }
+  controls.update(); press(["v-front", "v-side", "v-close", "v-back"], "v-" + k);
+  if (k === "back") { document.getElementById("wall").checked = false; wallGrp.visible = false; } }
 for (const k of Object.keys(VIEWS)) document.getElementById("v-" + k).addEventListener("click", () => view(k));
 document.getElementById("explode").addEventListener("input", e => { explode = +e.target.value; apply(); });
 document.getElementById("wall").addEventListener("change", e => { wallGrp.visible = e.target.checked; });
+document.getElementById("mount").addEventListener("change", e => { xray = e.target.checked; apply(); });
 
-function resize() {
-  const r = canvas.parentElement.getBoundingClientRect();
-  renderer.setSize(r.width, r.height, false); cam.aspect = r.width / Math.max(1, r.height); cam.updateProjectionMatrix();
+function resize() { const r = stage.getBoundingClientRect(); renderer.setSize(r.width, r.height, false); cam.aspect = r.width / Math.max(1, r.height); cam.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(stage);
+const tmp = new THREE.Vector3();
+function frame() {
+  controls.update(); renderer.render(scene, cam);
+  const r = stage.getBoundingClientRect();
+  for (const t of tags) { t.e.hidden = !xray; if (!xray) continue; tmp.copy(t.v3).applyMatrix4(T).project(cam); t.e.style.left = ((tmp.x + 1) / 2 * r.width) + "px"; t.e.style.top = ((1 - tmp.y) / 2 * r.height) + "px"; }
 }
-new ResizeObserver(resize).observe(canvas.parentElement);
-apply(); view("front"); resize();
-renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, cam); });
-window.__setView = (k, m, e, w, v) => { if (v) document.getElementById("var-" + v).click(); if (m) document.getElementById("m-" + m).click(); if (e != null) { explode = e; apply(); } view(k); if (w != null) wallGrp.visible = w; };
+buildRelief(); apply(); view("front"); resize();
+renderer.setAnimationLoop(frame);
+window.__set = (o) => { if (o.pattern) document.getElementById("d-" + o.pattern).click(); if (o.edge) document.getElementById("e-" + o.edge).click(); if (o.mount != null) { const m = document.getElementById("mount"); m.checked = o.mount; m.dispatchEvent(new Event("change")); }
+  if (o.mode) document.getElementById("m-" + o.mode).click(); if (o.explode != null) { explode = o.explode; apply(); } if (o.view) view(o.view); if (o.wall != null) { wallGrp.visible = o.wall; } if (o.db) document.querySelector(`#dbSw button[title="${o.db}"]`).click(); };
 </script>

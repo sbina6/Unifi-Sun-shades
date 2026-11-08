@@ -3,9 +3,10 @@
 ## The user's devices and site (read first)
 - Doorbell: **Ubiquiti UniFi Protect Doorbell Lite (UVC-Doorbell-Lite)**, 137 × 40 × 26.4 mm, metal plate 31 × 125 × 1.6, wall screws M3 on the centreline 74 mm c/c, Ø18 cable hole 88 mm below the top. Geometry lives in `cad/sunshade.py` and `v3/v3_geom.json`.
 - Site: Doha, wall facing 150°, doorbell on a 20° wedge (v3/v4 replace it), camera looking ~170°.
-- The doorbell is mounted over a Qatar / UK BS 4662 switch box (75 mm opening, lugs 60.3 mm c/c). Current designs: `v5a/` (centred v4 shape, 58 g, 2 kit wall screws) and `v5b/` (86 mm box-sized hood, 70 g, box screws). `adapter/` is the earlier two-piece bridge.
-- The user wants one-piece parts, light weight, and the doorbell CENTRED on the box: never move it off-centre to solve a fixing problem; ask instead. A bigger shade does not shade better (v2 sweep; v5b shades less), so size is a looks-only choice.
-- Any doorbell or mount request: start from this repo (check every branch) instead of asking the user for the model or dimensions, and design for the MSLA resin printer below, not FDM.
+- The doorbell is mounted over a Qatar / UK BS 4662 switch box (75 mm opening, lugs 60.3 mm c/c). Current design: `v5a/` (one piece: shade + wedge + 86 mm square, ~57 g, white doorbell). `adapter/` is the earlier two-piece bridge.
+- The user wants one-piece parts, light weight, and the doorbell CENTRED on the box: never move it off-centre to solve a fixing problem; ask instead.
+- Two separate joints: part to wall with the doorbell kit's own screws; doorbell plate to part with M3 screws into nut pockets.
+- Design language: Islamic geometric art (stars, rosettes, mashrabiya-style lattices, scalloped arches). The arched car-shade / pergola look was rejected: do not use it or its reference image. A bigger shade does not shade better (v2 sweep), so size is a looks-only choice.
 
 ## Toolchain
 - CAD Python: `/tmp/cadenv/bin/python` (build123d 0.13.0, cadquery-ocp-novtk 8.0.1.1.0, shapely 2.2.0, trimesh 5.2.0, numpy 2.5.4, scipy 1.18.1, matplotlib 3.11.2, pillow, ezdxf). If it's missing, rebuild it:

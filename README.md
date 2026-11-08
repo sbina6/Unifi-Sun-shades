@@ -98,7 +98,7 @@
 
 ## v4: car-shade style
 
-Same function as v3 (one part that replaces the 20° wedge, back flush to the wall, plate on sliding nuts, lip just outside the camera's picture), restyled after the arched car shade next to the doorbell ([reference](study/car_shade_reference.jpg)).
+Same function as v3 (one part that replaces the 20° wedge, back flush to the wall, plate on sliding nuts, lip just outside the camera's picture), an earlier style with a barrel vault, arched ribs and a diamond lattice (replaced by the Islamic geometric designs in v5a).
 
 ![v4 views](study/v4_views.png)
 
@@ -144,50 +144,53 @@ wall + switch box  →  adapter  →  metal plate (flat)  or  20° wedge / v3 / 
 
 **Rebuild:** `python cad/wall_adapter.py && python cad/verify_adapter.py && python cad/adapter_viewer.py && node cad/adapter_shots.js && python cad/export_adapter.py`
 
-## v5: one piece, centred on the switch box (two variants)
+## v5a: one piece, centred on the switch box, Islamic geometric patterns
 
-Both variants are a single Phrozen TR300 part: the sunshade, the 20° wedge, and a 2.0 mm cover that hides the Qatar / BS 4662 switch box. Both are centred on the box. (An earlier v5 that sat 17 mm off-centre was dropped.)
-
-| | **v5a: centred, v4 shape** | **v5b: box-sized** |
-|---|---|---|
-| Look | v4's shade centred on a symmetric 86 × 86 mm backplate | the hood itself is 86 mm wide (a switch plate's width), side walls square to the wall |
-| Mass | **58.0 g** | **70.0 g** |
-| Fixing | the doorbell kit's 2 × M3 screws + plugs in 2 new holes, 60 mm above and below the box centre, hidden under the plate (the shade sits over the box lugs) | the box's own 2 screws, inside the hood beside the wedge; no drilling |
-| Shade | same as v4 | less: 10–16 mm side gaps let low side sun in |
-| Prints (45° tilt) | 81.5 × 144.8 × 152.0 mm | 87.8 × 151.4 × 148.7 mm |
+One Phrozen TR300 part: the sunshade, the 20° wedge, and a 2.0 mm 86 × 86 mm square that hides the Qatar / BS 4662 switch box, all centred on the box. The side walls carry a 0.6 mm raised relief in one of five patterns. The default is 56.9 g, against 134 g for v4 plus the earlier separate adapter.
 
 ![v5a](v5a/v5a_views.png)
-![v5b](v5b/v5b_views.png)
 
-**Weight savings in both** (from v4 + adapter, 134 g):
-- 1.8 mm shell;
-- 2.0 mm seat with S-diamond windows under the doorbell;
-- no centre spine;
-- nut blocks trimmed to 9.2 × 16;
-- lattice relief 0.6 mm.
+**Two separate joints**
+- **Part and square to the wall:** the doorbell kit's own 2 screws and plugs, in 2 new holes 60 mm above and below the box centre (120 mm apart). Counterbore Ø8.5 with a Ø4.2 hole, square to the wall, so any kit screw up to M4 fits. The part is its own drilling template. Check for conduit before drilling.
+- **Doorbell plate to the part:** 2 × M3 × 12 screws into 2 M3 nut pockets (5.7 AF × 2.6 deep) behind the front face. Each pocket is a 12.6 mm slide, so the nut finds the screw wherever the plate holes are (90–102 mm apart).
 
-In v5a the shell is also the wedge's side wall.
+You can remove the doorbell without touching the wall fixing.
 
-**Sun** (Doha, 150° wall, camera at 170°; `study/v5a_hood_170.json`, `study/v5b_hood_170.json`):
+**Designs** (`v5a/print_kit/designs/`, all watertight, one body, 150 mm tall as printed)
 
-| Date | No shade | v4 | v5a | v5b (Wh/day on the doorbell) |
-|---|---|---|---|---|
-| Jun 21 | 15.0 | 0.2 | 0.2 | 0.5 |
-| May 1 / Aug 12 | 19.4 | 2.9 | 3.0 | 5.8 |
-| Mar 21 / Sep 23 | 28.6 | 11.7 | 11.8 | 17.7 |
-| Feb 5 / Nov 6 | 36.4 | 20.9 | 21.1 | 26.3 |
-| Dec 21 | 37.6 | 23.6 | 23.8 | 27.6 |
+![patterns](v5a/v5a_patterns.png)
 
-v5a keeps v4's shade exactly. v5b looks bigger but shades less. Its lip is cut to the camera picture in the same way, but its side walls stand 10–16 mm off the doorbell. This agrees with the v2 sweep (`study/sweep_150.json`): more reach adds nothing, and moving the walls away from the body costs shade.
+| Pattern | Mass |
+|---|---|
+| 8-point star (default) | 56.9 g |
+| 6-point star | 56.2 g |
+| Rosette | 57.5 g |
+| Octagon and star | 56.8 g |
+| Smooth | 51.6 g |
 
-**Checks** (`v5a/verify_report.json`, `v5b/verify_report.json`), all pass on both:
+Patterns are generated in `cad/shade_patterns.py` from tilings (stars with crosses, hexagrams, circle arrangement, octagon-square), each cell shrunk by half the bar width so every bar is 1.4 mm. The scalloped edge has 12 mm arches 3 mm deep. It only shortens the lip, so the camera picture stays clear.
+
+**Sun** (Doha, 150° wall, camera at 170°; `study/v5a_hood_170.json`), Wh/day on the doorbell:
+
+| Date | No shade | v4 | v5a |
+|---|---|---|---|
+| Jun 21 | 15.0 | 0.2 | 0.3 |
+| May 1 / Aug 12 | 19.4 | 2.9 | 3.6 |
+| Mar 21 / Sep 23 | 28.6 | 11.7 | 12.9 |
+| Feb 5 / Nov 6 | 36.4 | 20.9 | 22.2 |
+| Dec 21 | 37.6 | 23.6 | 24.9 |
+
+The scalloped edge costs a little shade against v4, and the pattern has no effect. A bigger shade would not shade better (v2 sweep, `study/sweep_150.json`).
+
+**Checks** (`v5a/verify_report.json`): all pass.
 - Doorbell and plate: 0 mm³ overlap.
 - Hook-on at 10°, 15° and 20° with a 4 mm lift: clear.
 - Camera picture covered: 0%.
-- Screw, Ø6 driver, plate-nut, lock-screw and cable paths clear (28 on v5a, 30 on v5b).
+- 36 screw, nut, driver, lock-screw and cable paths with 0 mm³ of plastic, including a nut dropped into each pocket from the wall side across its whole slide, and kit screws drawn at Ø4 with Ø8 heads.
+- Plate-screw tips 2.0 mm off the wall.
 - The box is hidden from the front.
-- STLs watertight, 1 body, no sealed voids. The only faces flatter than 45° facing down are 0.6 mm lattice ledges, as on v4. v5b is oriented in the wall frame because its walls are square to the wall.
+- STLs watertight, 1 body, no sealed voids.
 
-**Files:** `v5a/`, `v5b/` (STEP, `print_kit/`, print-kit zip), [viewer with both variants](https://claude.ai/artifact/EjEeACi4wuyu7NsmFokM8P).
+**Files:** `v5a/sunshade_hood_v5a.step`, `v5a/print_kit/` (STLs, PRINT_LIST.md, manifest.json), `v5a/sunshade_doorbell_lite_v5a_print_kit.zip`, [shade designer](https://claude.ai/artifact/EjEeACi4wuyu7NsmFokM8P) (patterns, edge, colours, mounting points).
 
-**Rebuild:** `python cad/sunshade_v5a.py && python cad/sunshade_v5b.py && python cad/verify_v5.py v5a && python cad/verify_v5.py v5b && python cad/sun_eval.py v5a/hood.brep study/v5a_hood_170.json 170 150` (same for v5b) `&& CAD_VER=v5a python cad/export_kit.py && CAD_VER=v5b python cad/export_kit.py && python cad/v5_viewer.py && node cad/v5_shots.js`. `sun_eval.py` reads `v1/device.brep`, which `cad/sunshade.py` writes.
+**Rebuild:** `python cad/sunshade_v5a.py --pattern khatam --edge scallop && python cad/verify_v5.py v5a && python cad/sun_eval.py v5a/hood.brep study/v5a_hood_170.json 170 150 && python cad/coupon_v3.py v5a && CAD_VER=v5a python cad/export_kit.py && python cad/export_v5_designs.py scallop`. For the viewer: `python cad/sunshade_v5a.py --base --edge scallop` and `--edge straight`, then `python cad/v5_viewer.py && node cad/v5_shots.js`. `sun_eval.py` reads `v1/device.brep`, which `cad/sunshade.py` writes.

@@ -1,5 +1,7 @@
 {
  "variant": "v5a",
+ "pattern": "khatam",
+ "edge": "scallop",
  "box_centre": [
   -6.356770402578776,
   -68.5,
@@ -30,6 +32,8 @@
   ]
  ],
  "wall_screw_floor": 3.0,
+ "wall_counterbore_d": 8.5,
+ "wall_hole_d": 4.2,
  "wall_holes_from_box_centre_mm": [
   [
    3.0,
@@ -39,5 +43,13 @@
    3.0,
    -60.0
   ]
+ ],
+ "nut_pockets_y": [
+  -20.5,
+  -116.5
+ ],
+ "nut_pocket_travel": [
+  -1.0,
+  5.0
  ]
 }

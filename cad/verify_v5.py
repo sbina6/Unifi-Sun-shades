@@ -50,8 +50,9 @@ def static_checks(_):
         for i, p in enumerate(G5["wall_screws"]):
             nm = ("top", "bottom")[i]
             ax = Plane(origin=Vector(*p), z_dir=nW)
-            shank = ax * Pos(0, 0, -25) * Cylinder(1.5, 25 + fl, align=(Align.CENTER, Align.CENTER, Align.MIN))
-            head = ax * Pos(0, 0, fl + 0.05) * Cylinder(2.9, 2.4, align=(Align.CENTER, Align.CENTER, Align.MIN))
+            # the kit screw is drawn at its biggest: d4.0 shank, d8.0 head (counterbore d8.5, hole d4.2)
+            shank = ax * Pos(0, 0, -25) * Cylinder(2.0, 25 + fl, align=(Align.CENTER, Align.CENTER, Align.MIN))
+            head = ax * Pos(0, 0, fl + 0.05) * Cylinder(4.0, 2.4, align=(Align.CENTER, Align.CENTER, Align.MIN))
             driver = ax * Pos(0, 0, fl + 2.5) * Cylinder(3.0, 150, align=(Align.CENTER, Align.CENTER, Align.MIN))
             paths[f"wall screw ({nm}) d3 shank through the floor"] = round(vol(part & shank), 4)
             paths[f"wall screw ({nm}) head d5.8 in counterbore"] = round(vol(part & head), 4)
@@ -65,6 +66,11 @@ def static_checks(_):
             nut = Pos(0, y, seat - 2.2 - 2.4) * Box(5.5, 6.35, 2.4, align=(Align.CENTER, Align.CENTER, Align.MIN))
             paths[f"plate screw ({nm}, {dy:+.0f}) M3x12 shank"] = round(vol(part & shank), 4)
             paths[f"plate screw ({nm}, {dy:+.0f}) nut 5.5 AF x 2.4"] = round(vol(part & nut), 4)
+            # nut dropped into its pocket from the wall side (pocket runs along the doorbell z axis)
+            ins = Pos(0, y, -45) * Box(5.5, 6.35, 45 + seat - 2.2 - 0.05, align=(Align.CENTER, Align.CENTER, Align.MIN))
+            paths[f"M3 nut pocket ({nm}, {dy:+.0f}) nut inserted from the wall side"] = round(vol(part & ins), 4)
+            wz = pW.Z - (0 - pW.X) * nW.X / nW.Z
+            paths[f"plate screw ({nm}, {dy:+.0f}) tip clearance to the wall (mm)"] = round(tip - wz, 2)
     for zc in (seat + 3.0, seat + 6.0, seat + 10.0):
         drv = Pos(0, -137 - 60, zc) * Rot(90, 0, 0) * Cylinder(3.0, 120)
         paths[f"lock screw + driver d6 from below at z={zc:.1f}"] = round(vol(part & drv), 4)
