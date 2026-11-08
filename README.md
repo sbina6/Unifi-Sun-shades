@@ -199,3 +199,43 @@ The deeper hood matches v4 in midsummer. Otherwise it lets in more low side sun,
 **Files:** `v6/sunshade_hood_v6.step`, `v6/print_kit/` (STLs, PRINT_LIST.md, manifest.json), `v6/sunshade_doorbell_lite_v6_print_kit.zip`, [shade designer](https://claude.ai/artifact/EjEeACi4wuyu7NsmFokM8P) (patterns, colours, the angled doorbell, mounting points).
 
 **Rebuild:** `python cad/sunshade_v6.py --pattern khatam && python cad/verify_v6.py && python cad/sun_eval.py v6/hood.brep study/v6_hood_170.json 170 150 && python cad/coupon_v3.py v6 && CAD_VER=v6 python cad/export_kit.py && python cad/export_v6_designs.py`. For the viewer: `python cad/sunshade_v6.py --base`, then `python cad/v6_viewer.py && node cad/v6_shots.js`. `sun_eval.py` reads `v1/device.brep`, which `cad/sunshade.py` writes.
+
+## v7: simple version, small shade, no angle
+
+One Phrozen TR300 part: a small shade that hugs the flat doorbell (48 mm wide, 2.4 mm gap each side), on an 86 × 86 mm backplate that hides the Qatar / BS 4662 switch box. No wedge and no bracket: the doorbell's own metal plate bolts straight onto the part. Everything is centred on the box. 56.7 g with the default pattern (51.5 g smooth).
+
+![v7](v7/v7_views.png)
+
+**Two bolted joints, independent of each other**
+- **Part to the wall:** the switch box's own 2 screws, left and right of the box, countersunk flush in the backplate's ears. The shade is narrow enough to stand between them, so a screwdriver reaches both along the wall normal. No drilling.
+- **Doorbell plate to the part:** 2 × M3 × 8 bolts into 2 M3 nut pockets (5.7 AF × 4.8 deep, open to the wall side, 4 mm slide), 74 mm apart. The 6.8 mm backplate gives the nuts room, so an 8 mm bolt (Voltaat sells that size) reaches the nut and stops above the wall.
+
+**Designs** (`v7/print_kit/designs/`): the same five patterns as v6 (8-point star 56.7 g, 6-point star 56.4 g, rosette 56.6 g, octagon and star 57.0 g, smooth 51.5 g), all watertight, one body, 141 mm tall as printed.
+
+![patterns](v7/v7_patterns.png)
+
+**Sun** (Doha, wall and camera facing 150°; `study/v7_hood_150.json`), Wh/day on the doorbell:
+
+| Date | No shade | v7 | Cut |
+|---|---|---|---|
+| Jun 21 | 18.7 | 2.4 | 87% |
+| May 1 / Aug 12 | 22.4 | 6.7 | 70% |
+| Mar 21 / Sep 23 | 29.1 | 13.9 | 52% |
+| Feb 5 / Nov 6 | 34.6 | 19.4 | 44% |
+| Dec 21 | 35.4 | 20.5 | 42% |
+
+The flat doorbell gets more low morning sun than the angled v4/v6 versions, where turning the doorbell away from the sun does part of the work.
+
+**Checks** (`v7/verify_report.json`): all pass.
+- Doorbell and plate: 0 mm³ overlap with the part.
+- Hook-on at 10°, 15° and 20° with a 4 mm lift: clear. The first build had a 16 mm roof gap and clashed at 20°; the roof gap is now 19 mm.
+- Camera picture covered: 0%.
+- 36 screw, nut, driver, lock-screw and cable paths with 0 mm³ of plastic, including a nut dropped into each pocket from the wall side across its whole slide.
+- The box is hidden from the front. The plate's Ø18 cable hole falls inside the cable window.
+- STLs watertight, 1 body, no sealed voids.
+
+**Assumption to confirm:** the plate's two end holes are 74 mm apart (from Ubiquiti's to-scale drawing).
+
+**Files:** `v7/sunshade_hood_v7.step`, `v7/print_kit/` (STLs, PRINT_LIST.md, manifest.json), `v7/sunshade_doorbell_lite_v7_print_kit.zip`, [viewer](https://claude.ai/artifact/PQCvqXZQqsWxvAeCA9HHaM).
+
+**Rebuild:** `python cad/sunshade_v7.py --pattern khatam && python cad/verify_v7.py && python cad/sun_eval.py v7/hood.brep study/v7_hood_150.json 150 150 && python cad/coupon_v3.py v7 && CAD_VER=v7 python cad/export_kit.py && python cad/export_v7_designs.py`. For the viewer: `python cad/sunshade_v7.py --base`, then `python cad/v7_viewer.py && node cad/v7_shots.js`.
