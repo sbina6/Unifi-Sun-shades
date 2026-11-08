@@ -46,16 +46,27 @@ def _at(g, x, y):
     return affinity.translate(g, x, y)
 
 
+def _fit(g, reg, big, amin=2.5, clip_min=9.0):
+    """Windows inside reg are kept whole. Ones that run off the edge are CLIPPED to reg, so the pattern
+    fills the whole face and ends at the frame; slivers under about 0.9 mm wide are dropped."""
+    if g.is_empty:
+        return []
+    if big.contains(g):
+        return [g] if g.area >= amin else []
+    c = g.intersection(reg)
+    if c.is_empty:
+        return []
+    c = c.buffer(-0.45, join_style=2).buffer(0.45, join_style=2)
+    return [q for q in getattr(c, "geoms", [c]) if q.geom_type == "Polygon" and q.area >= clip_min]
+
+
 def _finish(cells, reg, rib, join=2, amin=2.5):
-    """Shrink every cell by rib/2 and keep the ones fully inside reg."""
+    """Shrink every cell by rib/2 and keep (or clip) the ones that fall in reg."""
     out, big = [], reg.buffer(1e-6)
     for c in cells:
         w = c.buffer(-rib / 2.0, join_style=join)
         for g in getattr(w, "geoms", [w]):
-            if g.is_empty or g.area < amin:
-                continue
-            if big.contains(g):
-                out.append(g)
+            out += _fit(g, reg, big, amin)
     return out
 
 
@@ -130,8 +141,7 @@ def octstar(reg, rib, s=13.0):
     out, big = [], reg.buffer(1e-6)
     for w in wins:
         for g in getattr(w, "geoms", [w]):
-            if not g.is_empty and g.area > 2.5 and big.contains(g):
-                out.append(g)
+            out += _fit(g, reg, big)
     return out
 
 
@@ -184,7 +194,13 @@ def arcade(reg, rib, w=11.0, spring=7.0):
         c2 = Point(ns, yc - w / 2).buffer(w, 48)
         point = c1.intersection(c2).intersection(sbox(ns, yc - w / 2, ns + w, yc + w / 2))
         cells.append(unary_union([sbox(n0, yc - w / 2, ns, yc + w / 2), point]))
-    return _finish(cells, reg, rib)
+    wins = _finish(cells, reg, rib)
+    big = reg.buffer(1e-6)
+    tip = ns + 0.866 * w
+    for i in range(k):                                # a small round window above every arch, where the face is tall enough
+        yc = ya + (i + 0.5) * w
+        wins += _fit(Point(tip + rib + 3.0, yc).buffer(2.8, 24), reg, big, 4.0)
+    return wins
 
 
 def mashrabiya(reg, rib, p=10.0, rc=3.2, dd=2.6):
@@ -198,8 +214,7 @@ def mashrabiya(reg, rib, p=10.0, rc=3.2, dd=2.6):
     for i in range(-ni, ni + 1):
         for j in range(-nj, nj + 1):
             for g in (Point(cx + i * p, cy + j * p).buffer(rc, 32), _at(dia, cx + (i + .5) * p, cy + (j + .5) * p)):
-                if big.contains(g) and g.area > 4:
-                    wins.append(g)
+                wins += _fit(g, reg, big, 4.0)
     return wins
 
 

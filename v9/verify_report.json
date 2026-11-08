@@ -1,0 +1,73 @@
+{
+ "static": {
+  "device_vs_part_overlap_mm3": 0.0,
+  "plate_vs_part_overlap_mm3": 0.0,
+  "device_to_part_min_gap_mm": 0.0,
+  "plate_to_part_min_gap_mm": 0.0,
+  "part_behind_wall_mm3": 0.0,
+  "paths": {
+   "box screw (left) M3.5 shank into the lug": 0.0,
+   "box screw (left) d7.4 countersunk head, flush": 0.0,
+   "box screw (left) screwdriver d6 x 150 along the axis": 0.0,
+   "box screw (left) head vs the doorbell plate": 0,
+   "box screw (right) M3.5 shank into the lug": 0.0,
+   "box screw (right) d7.4 countersunk head, flush": 0.0,
+   "box screw (right) screwdriver d6 x 150 along the axis": 0.0,
+   "box screw (right) head vs the doorbell plate": 0,
+   "M3 bolt (top, -1) shank through the slot": 0.0,
+   "M3 nut (top, -1) seated against the skin": 0.0,
+   "M3 nut (top, -1) dropped in from the wall side": 0.0,
+   "M3 bolt (top, -1) screwdriver d6 from the front": 0.0,
+   "M3 bolt (top, +0) shank through the slot": 0.0,
+   "M3 nut (top, +0) seated against the skin": 0.0,
+   "M3 nut (top, +0) dropped in from the wall side": 0.0,
+   "M3 bolt (top, +0) screwdriver d6 from the front": 0.0,
+   "M3 bolt (top, +1) shank through the slot": 0.0,
+   "M3 nut (top, +1) seated against the skin": 0.0,
+   "M3 nut (top, +1) dropped in from the wall side": 0.0,
+   "M3 bolt (top, +1) screwdriver d6 from the front": 0.0,
+   "M3 bolt (bottom, -1) shank through the slot": 0.0,
+   "M3 nut (bottom, -1) seated against the skin": 0.0,
+   "M3 nut (bottom, -1) dropped in from the wall side": 0.0,
+   "M3 bolt (bottom, -1) screwdriver d6 from the front": 0.0,
+   "M3 bolt (bottom, +0) shank through the slot": 0.0,
+   "M3 nut (bottom, +0) seated against the skin": 0.0,
+   "M3 nut (bottom, +0) dropped in from the wall side": 0.0,
+   "M3 bolt (bottom, +0) screwdriver d6 from the front": 0.0,
+   "M3 bolt (bottom, +1) shank through the slot": 0.0,
+   "M3 nut (bottom, +1) seated against the skin": 0.0,
+   "M3 nut (bottom, +1) dropped in from the wall side": 0.0,
+   "M3 bolt (bottom, +1) screwdriver d6 from the front": 0.0,
+   "lock screw + driver d6 from below at z=5.2": 0.0,
+   "lock screw + driver d6 from below at z=8.2": 0.0,
+   "lock screw + driver d6 from below at z=12.2": 0.0,
+   "PoE cable d8 from the box through the window": 0.0
+  },
+  "cable_hole_d18_inside_window": true
+ },
+ "box_coverage_from_front": {
+  "box_opening_mm2": 5625.0,
+  "uncovered_mm2": 23.32,
+  "uncovered_except_screw_holes_mm2": 0.0
+ },
+ "install_sweep": {
+  "hook-on at 10 deg tilt, 4 mm lift": {
+   "max_overlap_mm3": 0.0,
+   "clashes": []
+  },
+  "hook-on at 15 deg tilt, 4 mm lift": {
+   "max_overlap_mm3": 0.0,
+   "clashes": []
+  },
+  "hook-on at 20 deg tilt, 4 mm lift": {
+   "max_overlap_mm3": 0.0,
+   "clashes": []
+  }
+ },
+ "camera_fov": {
+  "occluded_fraction": 0.0,
+  "occluded_outside_corners": 0.0,
+  "top_edge_centre_strip_occluded": 0.0,
+  "side_edge_centre_strip_occluded": 0.0
+ }
+}

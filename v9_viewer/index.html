@@ -42,6 +42,7 @@ section { display: flex; flex-direction: column; gap: 8px; }
 .seg { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
 .seg.two { grid-template-columns: 1fr 1fr; }
 .seg.four { grid-template-columns: repeat(4, 1fr); }
+.seg.five { grid-template-columns: repeat(5, 1fr); }
 .seg button { font: 500 13px var(--body); padding: 8px 4px; background: transparent; color: var(--fg); border: 0; border-left: 1px solid var(--line); cursor: pointer; }
 .seg button:first-child { border-left: 0; }
 .seg button[aria-pressed="true"] { background: var(--fg); color: var(--panel); }
@@ -90,6 +91,14 @@ dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; }
     </section>
 
     <section>
+      <span class="label">Roof design</span>
+      <div class="seg two" role="group" aria-label="Roof design">
+        <button id="r-steps" aria-pressed="true">Steps</button>
+        <button id="r-none" aria-pressed="false">Plain</button>
+      </div>
+    </section>
+
+    <section>
       <span class="label">Colours</span>
       <div class="sw" id="shadeSw" role="group" aria-label="Shade colour"><span>Shade</span></div>
       <div class="sw" id="dbSw" role="group" aria-label="Doorbell colour"><span>Doorbell</span></div>
@@ -112,11 +121,12 @@ dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; }
         <button id="m-plate" aria-pressed="false">Plate only</button>
         <button id="m-none" aria-pressed="false">Shade only</button>
       </div>
-      <div class="seg four" role="group" aria-label="Camera">
+      <div class="seg five" role="group" aria-label="Camera">
         <button id="v-front" aria-pressed="true">Front</button>
         <button id="v-side" aria-pressed="false">Side</button>
         <button id="v-close" aria-pressed="false">Pattern</button>
         <button id="v-back" aria-pressed="false">Back</button>
+        <button id="v-top" aria-pressed="false">Top</button>
       </div>
       <div class="row"><label for="explode">Pull the doorbell out</label><span id="explode-v" class="label">0 mm</span></div>
       <input id="explode" type="range" min="0" max="60" step="1" value="0">
@@ -126,7 +136,7 @@ dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; }
     <section>
       <span class="label">This design</span>
       <dl id="facts"></dl>
-      <p class="note">The pattern is engraved 0.8 mm into the 1.6 mm side walls, so it makes the part lighter, not heavier. In this viewer the engraved areas are drawn darker so they can be seen.</p>
+      <p class="note">The pattern is engraved 0.8 mm into the 1.6 mm side walls and runs over the whole face, so it makes the part lighter, not heavier. The roof carries a subtle stepped design, engraved 0.5 mm. In this viewer the engraved areas are drawn darker so they can be seen.</p>
       <p class="note">The doorbell's front details (glass, lens, button) are drawn approximately. The body colour is the real white.</p>
     </section>
   </aside>
@@ -169,7 +179,7 @@ const SHADE = { Grey: 0x8c9094, Charcoal: 0x3c4043, "Light grey": 0xc6c9cb, Sand
 const DB = { White: 0xf3f3f0, Black: 0x1c1d1f };
 const shadeMat = new THREE.MeshStandardMaterial({ color: SHADE.Grey, roughness: .62, metalness: 0, side: THREE.DoubleSide });
 const dbMat = new THREE.MeshStandardMaterial({ color: DB.White, roughness: .38, metalness: 0 });
-const reliefMat = new THREE.MeshStandardMaterial({ color: 0x6f7377, roughness: .62, side: THREE.DoubleSide });   // tinted darker only in the viewer, so the pattern reads
+const reliefMat = new THREE.MeshStandardMaterial({ color: 0x6f7377, roughness: .62, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });   // tinted darker only in the viewer, so the pattern reads
 const tint = c => new THREE.Color(c).multiplyScalar(.74);
 
 // the shade (wall frame) and its relief (wall frame)
@@ -229,7 +239,19 @@ const wallMat = new THREE.MeshStandardMaterial({ color: 0xcfcfc8, roughness: .95
   const back = new THREE.Mesh(new THREE.BoxGeometry(75, 75, t), boxMat); back.position.z = -depth; wallGrp.add(back);
 }
 
-let pattern = "khatam", mode = "all", explode = 0, xray = false;
+let pattern = "khatam", mode = "all", explode = 0, xray = false, roofOn = true;
+const roofG = new THREE.Group(); scene.add(roofG);
+function buildRoof() {                               // stepped pyramids engraved on the barrel roof: flat polygons bent onto the arch
+  while (roofG.children.length) { const c = roofG.children.pop(); c.geometry.dispose(); }
+  if (!roofOn) return;
+  const R = D.roofR, yc = D.roofYc;
+  for (const poly of window.MESHES._roof) {
+    const g = new THREE.ShapeGeometry(new THREE.Shape(poly.map(q => new THREE.Vector2(q[0], q[1]))));
+    const pos = g.attributes.position;
+    for (let i = 0; i < pos.count; i++) { const u = pos.getX(i), n = pos.getY(i); pos.setXYZ(i, u, yc + Math.sqrt(R * R - u * u) + .12, n); }
+    g.computeVertexNormals(); roofG.add(new THREE.Mesh(g, reliefMat));
+  }
+}
 function buildRelief() {
   while (lat.children.length) { const c = lat.children.pop(); c.geometry.dispose(); }
   const P = window.PATTERNS[pattern];
@@ -251,7 +273,7 @@ function apply() {
   plate.material.transparent = xray; plate.material.opacity = xray ? .5 : 1;
   mk.visible = xray; document.getElementById("legend").classList.toggle("on", xray);
   document.getElementById("explode-v").textContent = explode + " mm";
-  document.getElementById("facts").innerHTML = [["Pattern", LAB[pattern]], ["Shade", "48 mm wide, 42 mm deep at most, no angle"], ["Back flap", "1.6 mm thin, 82 × 82 mm"], ["Pattern", "engraved 0.8 mm deep"], ["Printed mass", "≈ " + MASS[pattern].toFixed(0) + " g, TR300 resin"],
+  document.getElementById("facts").innerHTML = [["Pattern", LAB[pattern]], ["Shade", "48 mm wide, 42 mm deep at most, no angle"], ["Back flap", "1.6 mm thin, 82 × 82 mm"], ["Pattern", "engraved 0.8 mm, over the whole face"], ["Roof", roofOn ? "stepped design, 0.5 mm" : "plain"], ["Printed mass", "≈ " + (MASS[pattern] - (roofOn ? 0 : -window.MESHES._roof_g) - (roofOn ? window.MESHES._roof_g : 0)).toFixed(0) + " g, TR300 resin"],
     ["Fixing to wall", "the box's own 2 screws, no drilling"], ["Doorbell plate", "2 × M3 × 8 into 2 nut holders, 74 mm apart"]].map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("");
 }
 function press(ids, id) { for (const i of ids) document.getElementById(i).setAttribute("aria-pressed", String(i === id)); }
@@ -287,15 +309,16 @@ swatches(document.getElementById("shadeSw"), SHADE, h => { shadeMat.color.setHex
 reliefMat.color.copy(tint(SHADE.Grey));
 swatches(document.getElementById("dbSw"), DB, h => { dbMat.color.setHex(h); btnMat.color.setHex(h); }, "White");
 
+for (const k of ["steps", "none"]) document.getElementById("r-" + k).addEventListener("click", () => { roofOn = k === "steps"; press(["r-steps", "r-none"], "r-" + k); buildRoof(); apply(); });
 for (const k of ["all", "plate", "none"]) document.getElementById("m-" + k).addEventListener("click", () => { mode = k; press(["m-all", "m-plate", "m-none"], "m-" + k); apply(); });
-const VIEWS = { front: [40, 90, 330], side: [-330, 40, 110], back: [-90, 80, -300] };
+const VIEWS = { front: [40, 90, 330], side: [-330, 40, 110], back: [-90, 80, -300], top: [30, 330, 120] };
 function view(k) {
   if (k === "close") {   // the right-hand side wall, face-on
     const tg = new THREE.Vector3(D.HW, 10, 22); controls.target.copy(tg); cam.position.set(D.HW + 190, 14, 22);
   } else { const [x, y, zz] = VIEWS[k]; cam.position.set(x, y, zz); controls.target.copy(TARGET); }
-  controls.update(); press(["v-front", "v-side", "v-close", "v-back"], "v-" + k);
+  controls.update(); press(["v-front", "v-side", "v-close", "v-back", "v-top"], "v-" + k);
   if (k === "back") { document.getElementById("wall").checked = false; wallGrp.visible = false; } }
-for (const k of ["front", "side", "close", "back"]) document.getElementById("v-" + k).addEventListener("click", () => view(k));
+for (const k of ["front", "side", "close", "back", "top"]) document.getElementById("v-" + k).addEventListener("click", () => view(k));
 document.getElementById("explode").addEventListener("input", e => { explode = +e.target.value; apply(); });
 document.getElementById("wall").addEventListener("change", e => { wallGrp.visible = e.target.checked; });
 document.getElementById("mount").addEventListener("change", e => { xray = e.target.checked; apply(); });
@@ -308,8 +331,8 @@ function frame() {
   const r = stage.getBoundingClientRect();
   for (const t of tags) { t.e.hidden = !xray; if (!xray) continue; tmp.copy(t.v3).project(cam); t.e.style.left = ((tmp.x + 1) / 2 * r.width) + "px"; t.e.style.top = ((1 - tmp.y) / 2 * r.height) + "px"; }
 }
-buildRelief(); apply(); view("front"); resize();
+buildRelief(); buildRoof(); apply(); view("front"); resize();
 renderer.setAnimationLoop(frame);
-window.__set = (o) => { if (o.pattern) document.getElementById("d-" + o.pattern).click(); if (o.mount != null) { const m = document.getElementById("mount"); m.checked = o.mount; m.dispatchEvent(new Event("change")); }
+window.__set = (o) => { if (o.roof) document.getElementById("r-" + o.roof).click(); if (o.pattern) document.getElementById("d-" + o.pattern).click(); if (o.mount != null) { const m = document.getElementById("mount"); m.checked = o.mount; m.dispatchEvent(new Event("change")); }
   if (o.mode) document.getElementById("m-" + o.mode).click(); if (o.explode != null) { explode = o.explode; apply(); } if (o.view) view(o.view); if (o.wall != null) { wallGrp.visible = o.wall; } if (o.db) document.querySelector(`#dbSw button[title="${o.db}"]`).click(); };
 </script>

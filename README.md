@@ -272,3 +272,30 @@ The simple version (v7) with three changes:
 
 **Rebuild:** `python cad/sunshade_v8.py --pattern khatam && python cad/verify_v8.py && python cad/coupon_v3.py v8 && CAD_VER=v8 python cad/export_kit.py && python cad/export_v8_designs.py`. For the viewer: `python cad/sunshade_v8.py --base`, then `python cad/v8_viewer.py && node cad/v8_shots.js`.
 
+## v9: patterns over the whole face, stepped roof
+
+v8 with two changes:
+- **Patterns over the whole face.** The engraved pattern now runs over the whole face of both side walls, edge to edge inside a 2.6 mm frame. Motifs at the edge are cut off by the frame, as in traditional screens, and slivers under about 0.9 mm wide are dropped. The pointed-arch design gets a small round window above each arch.
+- **Stepped roof design.** Two rows of stepped pyramids (the crenellation motif; seven in all) are engraved 0.5 mm into the barrel roof, pointing toward the front. It is subtle: it removes 0.15 g and leaves 1.1 mm of roof.
+
+![v9](v9/v9_views.png)
+
+![patterns](v9/v9_patterns.png)
+
+| Design | v8 (band) | v9 (whole face + roof) |
+|---|---|---|
+| 8-point star | 36.0 g | 34.3 g |
+| 6-point star | 35.5 g | 33.3 g |
+| 12-point star | 35.6 g | 34.8 g |
+| Rosette | 35.8 g | 35.5 g |
+| Octagon and star | 36.3 g | 33.6 g |
+| Pointed arches | 35.5 g | 34.9 g |
+| Mashrabiya | 35.4 g | 34.8 g |
+| Smooth | 38.2 g | 38.1 g |
+
+**Checks** (`v9/verify_report.json`): all pass, as for v8: no overlap, hook-on clear at 10°, 15° and 20°, 0% of the camera picture covered, 36 clear screw, nut, driver, lock-screw and cable paths, the box hidden, STLs watertight. The shade shape and lip are unchanged, so the v8/v7 sun numbers apply.
+
+**Files:** `v9/sunshade_hood_v9.step`, `v9/print_kit/` (STLs for all eight designs, PRINT_LIST.md, manifest.json), `v9/sunshade_doorbell_lite_v9_print_kit.zip`, [viewer](https://claude.ai/artifact/PQCvqXZQqsWxvAeCA9HHaM) (with a roof on/off switch and a top view).
+
+**Rebuild:** `python cad/sunshade_v9.py --pattern khatam && python cad/verify_v9.py && python cad/coupon_v3.py v9 && CAD_VER=v9 python cad/export_kit.py && python cad/export_v9_designs.py`. For the viewer: `python cad/sunshade_v9.py --base`, then `python cad/v9_viewer.py && node cad/v9_shots.js`.
+
