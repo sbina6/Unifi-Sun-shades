@@ -239,3 +239,36 @@ The flat doorbell gets more low morning sun than the angled v4/v6 versions, wher
 **Files:** `v7/sunshade_hood_v7.step`, `v7/print_kit/` (STLs, PRINT_LIST.md, manifest.json), `v7/sunshade_doorbell_lite_v7_print_kit.zip`, [viewer](https://claude.ai/artifact/PQCvqXZQqsWxvAeCA9HHaM).
 
 **Rebuild:** `python cad/sunshade_v7.py --pattern khatam && python cad/verify_v7.py && python cad/sun_eval.py v7/hood.brep study/v7_hood_150.json 150 150 && python cad/coupon_v3.py v7 && CAD_VER=v7 python cad/export_kit.py && python cad/export_v7_designs.py`. For the viewer: `python cad/sunshade_v7.py --base`, then `python cad/v7_viewer.py && node cad/v7_shots.js`.
+
+## v8: simple version, thin back flap, nut holders, engraved patterns
+
+The simple version (v7) with three changes:
+- **Thin back flap.** 1.6 mm solid, 82 × 82 mm, instead of a 6.8 mm hollow plate with a spine. The shade is unchanged.
+- **Nut holders.** Two small raised blocks (12 × 14 mm, 5.2 mm tall) on the front of the flap, 74 mm apart, each with an M3 nut pocket under a 2.0 mm top skin and a window through the flap to drop the nut in from behind. The doorbell plate sits on their tops, 6.8 mm from the wall, as in v7. Two 3.6 mm bosses hold the countersinks for the box screws.
+- **Engraved patterns.** The pattern is cut 0.8 mm into the 1.6 mm side walls instead of raised 0.6 mm on them, so a pattern now makes the part lighter than the smooth one. Three new designs: 12-point star, pointed arches, mashrabiya (eight designs in all).
+
+![v8](v8/v8_views.png)
+
+| Design | v7 (raised) | v8 (engraved) |
+|---|---|---|
+| 8-point star | 56.7 g | 36.0 g |
+| 6-point star | 56.4 g | 35.5 g |
+| 12-point star | | 35.6 g |
+| Rosette | 56.6 g | 35.8 g |
+| Octagon and star | 57.0 g | 36.3 g |
+| Pointed arches | | 35.5 g |
+| Mashrabiya | | 35.4 g |
+| Smooth | 51.5 g | 38.2 g |
+
+![patterns](v8/v8_patterns.png)
+
+**Mounting** is unchanged: the switch box's own 2 screws left and right (no drilling), and 2 × M3 × 8 into the nut holders.
+
+**Checks** (`v8/verify_report.json`): all pass, as for v7. No overlap with the doorbell or plate, hook-on clear at 10°, 15° and 20°, 0% of the camera picture covered, 36 screw, nut, driver, lock-screw and cable paths clear (including a nut dropped in from the wall side through each flap window), the box hidden from the front, STLs watertight. The sun numbers are the same as v7 (the shade is unchanged).
+
+**Strength:** an estimate, not a finite-element run: about 1 MPa bending stress in the flap at the box screws for the doorbell's weight, and about 7 MPa nut bearing at a hand-tight 100 N.
+
+**Files:** `v8/sunshade_hood_v8.step`, `v8/print_kit/` (STLs for all eight designs, PRINT_LIST.md, manifest.json), `v8/sunshade_doorbell_lite_v8_print_kit.zip`, [viewer](https://claude.ai/artifact/PQCvqXZQqsWxvAeCA9HHaM).
+
+**Rebuild:** `python cad/sunshade_v8.py --pattern khatam && python cad/verify_v8.py && python cad/coupon_v3.py v8 && CAD_VER=v8 python cad/export_kit.py && python cad/export_v8_designs.py`. For the viewer: `python cad/sunshade_v8.py --base`, then `python cad/v8_viewer.py && node cad/v8_shots.js`.
+

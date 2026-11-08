@@ -1,0 +1,66 @@
+{
+ "variant": "v8",
+ "pattern": "khatam",
+ "box_centre": [
+  0.0,
+  -68.5,
+  -4.6
+ ],
+ "u_axis": [
+  1.0,
+  0.0,
+  0.0
+ ],
+ "wall_normal": [
+  0.0,
+  0.0,
+  1.0
+ ],
+ "box": 75.0,
+ "box_lugs_used": true,
+ "hood_width": 48.0,
+ "plate_t": 1.6,
+ "plate_back_n": 6.8,
+ "lug_top": 3.6,
+ "skin": 2.0,
+ "holder": [
+  12.0,
+  14.0
+ ],
+ "C_U": 0.0,
+ "bracket_u_local": 0.0,
+ "hole_dy": 37.0,
+ "variant_note": "simple: flat, thin flap, nut holders",
+ "lug_points": [
+  [
+   -30.15,
+   -68.5,
+   -4.6
+  ],
+  [
+   30.15,
+   -68.5,
+   -4.6
+  ]
+ ],
+ "pocket_points": [
+  [
+   0.0,
+   -31.5,
+   -4.6
+  ],
+  [
+   0.0,
+   -105.5,
+   -4.6
+  ]
+ ],
+ "cable_window": [
+  -11.0,
+  11.0,
+  -29.0,
+  26.0
+ ],
+ "nut_travel": 2.0,
+ "orient_in_wall_frame": true
+}

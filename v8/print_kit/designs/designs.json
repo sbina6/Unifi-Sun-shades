@@ -1,0 +1,106 @@
+{
+ "khatam": {
+  "file": "shade_khatam_TR300.stl",
+  "mass_g": 36.0,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   82.0,
+   141.4,
+   141.4
+  ],
+  "flat_down_area_mm2": 527,
+  "largest_flat_facet_mm2": 1.66
+ },
+ "hexstar": {
+  "file": "shade_hexstar_TR300.stl",
+  "mass_g": 35.5,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   82.0,
+   141.4,
+   141.4
+  ],
+  "flat_down_area_mm2": 274,
+  "largest_flat_facet_mm2": 1.29
+ },
+ "dodecastar": {
+  "file": "shade_dodecastar_TR300.stl",
+  "mass_g": 35.6,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   82.0,
+   141.4,
+   141.4
+  ],
+  "flat_down_area_mm2": 801,
+  "largest_flat_facet_mm2": 1.03
+ },
+ "rosette": {
+  "file": "shade_rosette_TR300.stl",
+  "mass_g": 35.8,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   82.0,
+   141.4,
+   141.4
+  ],
+  "flat_down_area_mm2": 536,
+  "largest_flat_facet_mm2": 0.41
+ },
+ "octstar": {
+  "file": "shade_octstar_TR300.stl",
+  "mass_g": 36.3,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   82.0,
+   141.4,
+   141.4
+  ],
+  "flat_down_area_mm2": 297,
+  "largest_flat_facet_mm2": 1.92
+ },
+ "arcade": {
+  "file": "shade_arcade_TR300.stl",
+  "mass_g": 35.5,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   82.0,
+   141.4,
+   141.4
+  ],
+  "flat_down_area_mm2": 193,
+  "largest_flat_facet_mm2": 0.4
+ },
+ "mashrabiya": {
+  "file": "shade_mashrabiya_TR300.stl",
+  "mass_g": 35.4,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   82.0,
+   141.4,
+   141.4
+  ],
+  "flat_down_area_mm2": 448,
+  "largest_flat_facet_mm2": 1.47
+ },
+ "smooth": {
+  "file": "shade_smooth_TR300.stl",
+  "mass_g": 38.2,
+  "watertight": true,
+  "min_z": 0.0,
+  "bbox_mm": [
+   82.0,
+   141.4,
+   141.4
+  ],
+  "flat_down_area_mm2": 0,
+  "largest_flat_facet_mm2": 0
+ }
+}

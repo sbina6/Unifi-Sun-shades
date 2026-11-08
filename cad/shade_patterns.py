@@ -9,6 +9,9 @@ of a tiling that covers the plane is shrunk by rib/2.
   hexstar   6-point stars (hexagrams) touching tip to tip, curved triangles between them
   rosette   overlapping circles on a triangular grid (flower of life): petals and curved triangles
   octstar   octagons and squares (4.8.8) with an 8-point star island inside each octagon
+  dodecastar 12-point stars touching tip to tip, with curved triangles between them
+  arcade    a row of pointed arches (the mihrab / arcade profile)
+  mashrabiya circles and diamonds on a square grid, like a turned-wood screen
   smooth    no relief
 """
 import math
@@ -132,9 +135,77 @@ def octstar(reg, rib, s=13.0):
     return out
 
 
+def star12(r, k=0.62):
+    """Twelve-point star: tips (radius r) every 30 degrees from 0, notches at radius k*r."""
+    pts = []
+    for m in range(24):
+        a = math.radians(15.0 * m)
+        rr = r if m % 2 == 0 else k * r
+        pts.append((rr * math.cos(a), rr * math.sin(a)))
+    return Polygon(pts)
+
+
+def dodecastar(reg, rib, r=7.0):
+    """12-point stars on a triangular grid, tips touching along the grid directions."""
+    cx, cy = reg.centroid.x, reg.centroid.y
+    x0, y0, x1, y1 = reg.bounds
+    a1, a2 = (2 * r, 0.0), (r, math.sqrt(3) * r)
+    n = int(max(x1 - x0, y1 - y0) / r) + 4
+    pts = {}
+    for i in range(-n, n + 1):
+        for j in range(-n, n + 1):
+            x, y = cx + i * a1[0] + j * a2[0], cy + i * a1[1] + j * a2[1]
+            if x0 - 3 * r < x < x1 + 3 * r and y0 - 3 * r < y < y1 + 3 * r:
+                pts[(i, j)] = (x, y)
+    st = star12(r)
+    stars = {k: _at(st, *p) for k, p in pts.items()}
+    cells = list(stars.values())
+    for (i, j), p in pts.items():
+        for tri in (((i, j), (i + 1, j), (i, j + 1)), ((i + 1, j), (i, j + 1), (i + 1, j + 1))):
+            if all(k in pts for k in tri):
+                g = Polygon([pts[k] for k in tri]).difference(unary_union([stars[k] for k in tri]))
+                cells += list(getattr(g, "geoms", [g]))
+    return _finish(cells, reg, rib)
+
+
+def arcade(reg, rib, w=11.0, spring=7.0):
+    """A row of pointed arches along the wall (x = distance from the wall, y = along it), points outward.
+    Each cell is w wide; neighbours share a bar of width rib."""
+    from shapely.geometry import Point
+    x0, y0, x1, y1 = reg.bounds
+    n0 = x0 + 0.5
+    ns = n0 + spring
+    cells = []
+    k = int((y1 - y0) / w)
+    ya = (y0 + y1) / 2 - k * w / 2
+    for i in range(k):
+        yc = ya + (i + 0.5) * w
+        c1 = Point(ns, yc + w / 2).buffer(w, 48)
+        c2 = Point(ns, yc - w / 2).buffer(w, 48)
+        point = c1.intersection(c2).intersection(sbox(ns, yc - w / 2, ns + w, yc + w / 2))
+        cells.append(unary_union([sbox(n0, yc - w / 2, ns, yc + w / 2), point]))
+    return _finish(cells, reg, rib)
+
+
+def mashrabiya(reg, rib, p=10.0, rc=3.2, dd=2.6):
+    """Circles on a square grid with a small diamond at the centre of every cell."""
+    from shapely.geometry import Point
+    cx, cy = reg.centroid.x, reg.centroid.y
+    x0, y0, x1, y1 = reg.bounds
+    ni, nj = int((x1 - x0) / p) + 3, int((y1 - y0) / p) + 3
+    dia = _ngon(dd, 4, 0)
+    wins, big = [], reg.buffer(1e-6)
+    for i in range(-ni, ni + 1):
+        for j in range(-nj, nj + 1):
+            for g in (Point(cx + i * p, cy + j * p).buffer(rc, 32), _at(dia, cx + (i + .5) * p, cy + (j + .5) * p)):
+                if big.contains(g) and g.area > 4:
+                    wins.append(g)
+    return wins
+
+
 def smooth(reg, rib):
     return None
 
 
-PATTERNS = {"khatam": khatam, "hexstar": hexstar, "rosette": rosette, "octstar": octstar, "smooth": smooth}
-LABELS = {"khatam": "8-point star", "hexstar": "6-point star", "rosette": "Rosette", "octstar": "Octagon and star", "smooth": "Smooth"}
+PATTERNS = {"khatam": khatam, "hexstar": hexstar, "dodecastar": dodecastar, "rosette": rosette, "octstar": octstar, "arcade": arcade, "mashrabiya": mashrabiya, "smooth": smooth}
+LABELS = {"khatam": "8-point star", "hexstar": "6-point star", "dodecastar": "12-point star", "rosette": "Rosette", "octstar": "Octagon and star", "arcade": "Pointed arches", "mashrabiya": "Mashrabiya", "smooth": "Smooth"}
